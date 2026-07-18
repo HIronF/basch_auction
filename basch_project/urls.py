@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from auction.views import index_view, admin_view, teams_view, players_view, analytics_view, projector_view
+from auction.views import onboarding_view, index_view, admin_view, teams_view, players_view, analytics_view, projector_view
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
@@ -27,5 +27,6 @@ urlpatterns = [
     path('analytics/', analytics_view, name='analytics_console'),
     path('projector/', projector_view, name='projector_console'),
     path('api/', include('auction.urls')),
-    path('', index_view, name='index'),
+    path('auction/', index_view, name='index'),
+    path('', onboarding_view, name='onboarding'),
 ]

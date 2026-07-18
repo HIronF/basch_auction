@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome — Tournament Auction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* ===== Onboarding scoped styles (built on BASCH design tokens) ===== */
+        body.onboarding-body {
+            height: 100vh;
+            overflow: hidden;
+            background:
+                radial-gradient(1200px 600px at 15% -10%, rgba(37, 99, 235, 0.08), transparent 60%),
+                radial-gradient(900px 500px at 100% 110%, rgba(244, 180, 0, 0.10), transparent 55%),
+                var(--bg-main);
+        }
+
+        .ob-shell {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top brand bar */
+        .ob-topbar {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 40px;
+        }
+
+        .ob-topbar img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .ob-brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .ob-brand-text strong {
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 1.02rem;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+        }
+
+        .ob-brand-text span {
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* Slides viewport */
+        .ob-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ob-slide {
+            position: absolute;
+            inset: 0;
+            padding: 10px 40px 24px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(16px);
+            transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+        }
+
+        .ob-slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* ---------- Screen 1: Welcome ---------- */
+        .ob-welcome {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .ob-welcome-logo {
+            height: 92px;
+            width: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.10));
+            animation: obPop 0.6s ease both;
+        }
+
+        .ob-eyebrow {
+            font-family: var(--font-subheading);
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 18px;
+        }
+
+        .ob-welcome h1 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+            color: var(--text-primary);
+            line-height: 1.1;
+            max-width: 16ch;
+            margin-bottom: 20px;
+        }
+
+        .ob-welcome h1 em {
+            font-style: italic;
+            color: var(--accent-gold-dark);
+        }
+
+        .ob-welcome p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 52ch;
+            line-height: 1.7;
+        }
+
+        .ob-tournament-chip {
+            margin-top: 26px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            font-family: var(--font-subheading);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .ob-tournament-chip i {
+            color: var(--accent-gold-dark);
+        }
+
+        /* ---------- Slide heading (screens 2 & 3) ---------- */
+        .ob-slide-head {
+            flex-shrink: 0;
+            margin-bottom: 18px;
+        }
+
+        .ob-slide-head .ob-eyebrow {
+            margin-bottom: 8px;
+        }
+
+        .ob-slide-head h2 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2.1rem);
+            color: var(--text-primary);
+        }
+
+        .ob-slide-head p {
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ---------- Screen 2: Overview ---------- */
+        .ob-overview-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 22px;
+        }
+
+        .ob-panel {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .ob-panel-title {
+            flex-shrink: 0;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-subheading);
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ob-panel-title .count {
+            margin-left: auto;
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-family: var(--font-number);
+            font-size: 0.72rem;
+        }
+
+        .ob-teams-scroll {
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ob-team-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-left-width: 4px;
+        }
+
+        .ob-team-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            padding: 3px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .ob-team-name {
+            font-family: var(--font-subheading);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Categories: 4 equal sections */
+        .ob-cats-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .ob-cat-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .ob-cat-head {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .ob-cat-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .ob-cat-name {
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .ob-cat-count {
+            margin-left: auto;
+            font-family: var(--font-number);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            background: var(--bg-subtle);
+            border-radius: 999px;
+            padding: 2px 9px;
+        }
+
+        .ob-cat-players {
+            overflow-y: auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            align-content: flex-start;
+        }
+
+        .ob-player-pill {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 5px 12px;
+            white-space: nowrap;
+        }
+
+        .ob-empty-note {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ---------- Screen 3: Rules ---------- */
+        .ob-rules-wrap {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .ob-rules-scroll {
+            overflow-y: auto;
+            padding: 30px 36px;
+            max-width: 900px;
+        }
+
+        .ob-rule-group {
+            margin-bottom: 26px;
+        }
+
+        .ob-rule-group h3 {
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .ob-rule-group h3 i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .ob-rule-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ob-rule-list li {
+            position: relative;
+            padding-left: 26px;
+            color: var(--text-primary);
+            font-size: 0.96rem;
+            line-height: 1.6;
+        }
+
+        .ob-rule-list li::before {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: 9px;
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            background: var(--accent-gold);
+            transform: rotate(45deg);
+        }
+
+        .ob-rule-list li strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* ---------- Footer nav ---------- */
+        .ob-footer {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 40px 26px;
+        }
+
+        .ob-dots {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ob-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .ob-dot.active {
+            width: 30px;
+            border-radius: 999px;
+            background: var(--accent-primary);
+        }
+
+        .ob-step-label {
+            font-family: var(--font-subheading);
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+        }
+
+        .ob-footer-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ob-btn-lg {
+            padding: 13px 26px;
+            font-size: 0.95rem;
+            border-radius: 999px;
+        }
+
+        .ob-btn-icon {
+            width: 52px;
+            height: 52px;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .ob-btn-icon i {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.4px;
+        }
+
+        @keyframes obPop {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 860px) {
+            .ob-topbar,
+            .ob-slide,
+            .ob-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .ob-overview-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: minmax(0, auto);
+                overflow-y: auto;
+            }
+
+            .ob-teams-scroll {
+                max-height: 220px;
+            }
+
+            .ob-cats-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: none;
+            }
+
+            .ob-cat-card {
+                min-height: 160px;
+            }
+        }
+    </style>
+</head>
+
+<body class="onboarding-body">
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="ob-shell">
+        <!-- Brand bar -->
+        <div class="ob-topbar">
+            <img src="/static/assets/basch-logo.png" alt="BASCH" onerror="this.style.display='none'">
+            <div class="ob-brand-text">
+                <strong id="brandName">BASCH</strong>
+                <span>Tournament Auction</span>
+            </div>
+        </div>
+
+        <!-- Slides -->
+        <div class="ob-viewport">
+            <!-- Screen 1: Welcome -->
+            <section class="ob-slide ob-welcome active" data-slide="0">
+                <img class="ob-welcome-logo" src="/static/assets/basch-logo.png" alt="Logo"
+                    onerror="this.style.display='none'">
+                <div class="ob-eyebrow">Welcome</div>
+                <h1>Welcome to the <em id="welcomeTournament">Tournament</em> Auction</h1>
+                <p>Get ready to build your dream squad. Review the teams, player categories and
+                    auction rules before the bidding goes live.</p>
+                <div class="ob-tournament-chip">
+                    <i data-lucide="trophy"></i>
+                    <span id="welcomeChip">Team Championship</span>
+                </div>
+            </section>
+
+            <!-- Screen 2: Team & Player Categories Overview -->
+            <section class="ob-slide" data-slide="1">
+                <div class="ob-slide-head">
+                    <div class="ob-eyebrow">Overview</div>
+                    <h2>Teams &amp; Player Categories</h2>
+                    <p>All participating teams and the players available in each category.</p>
+                </div>
+                <div class="ob-overview-grid">
+                    <!-- Left: Teams list -->
+                    <div class="ob-panel">
+                        <div class="ob-panel-title">
+                            <i data-lucide="shield" class="lucide"></i>
+                            Teams
+                            <span class="count" id="teamCount">0</span>
+                        </div>
+                        <div class="ob-teams-scroll" id="obTeamsList"></div>
+                    </div>
+                    <!-- Right: 4 category cards -->
+                    <div class="ob-cats-grid" id="obCatsGrid"></div>
+                </div>
+            </section>
+
+            <!-- Screen 3: Auction Rules -->
+            <section class="ob-slide" data-slide="2">
+                <div class="ob-slide-head">
+                    <div class="ob-eyebrow">Before we begin</div>
+                    <h2>Auction Rules</h2>
+                    <p>Please read the rules carefully. Scroll to review everything.</p>
+                </div>
+                <div class="ob-rules-wrap">
+                    <div class="ob-rules-scroll" id="obRules"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer nav -->
+        <div class="ob-footer">
+            <div class="ob-dots">
+                <span class="ob-dot active"></span>
+                <span class="ob-dot"></span>
+                <span class="ob-dot"></span>
+            </div>
+            <span class="ob-step-label" id="stepLabel">Step 1 of 3</span>
+
+            <div class="ob-footer-actions">
+                <button id="btnBack" class="btn btn-outline ob-btn-lg hidden">
+                    <i data-lucide="arrow-left"></i>
+                    <span>Back</span>
+                </button>
+                <button id="btnNext" class="btn btn-primary ob-btn-icon" title="Next">
+                    <i data-lucide="arrow-right"></i>
+                </button>
+                <button id="btnContinue" class="btn btn-success ob-btn-lg hidden">
+                    <i data-lucide="gavel"></i>
+                    <span>Start Auction</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+            const AUCTION_URL = "/auction/";
+            const TOTAL = 3;
+            let current = 0;
+
+            const slides = Array.from(document.querySelectorAll(".ob-slide"));
+            const dots = Array.from(document.querySelectorAll(".ob-dot"));
+            const stepLabel = document.getElementById("stepLabel");
+            const btnBack = document.getElementById("btnBack");
+            const btnNext = document.getElementById("btnNext");
+            const btnContinue = document.getElementById("btnContinue");
+
+            function refreshIcons() {
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function goTo(index) {
+                current = Math.max(0, Math.min(TOTAL - 1, index));
+                slides.forEach((s, i) => s.classList.toggle("active", i === current));
+                dots.forEach((d, i) => d.classList.toggle("active", i === current));
+                stepLabel.textContent = `Step ${current + 1} of ${TOTAL}`;
+                btnBack.classList.toggle("hidden", current === 0);
+                const isLast = current === TOTAL - 1;
+                btnNext.classList.toggle("hidden", isLast);
+                btnContinue.classList.toggle("hidden", !isLast);
+                refreshIcons();
+            }
+
+            btnNext.addEventListener("click", () => goTo(current + 1));
+            btnBack.addEventListener("click", () => goTo(current - 1));
+            btnContinue.addEventListener("click", () => { window.location.href = AUCTION_URL; });
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowRight") goTo(current + 1);
+                if (e.key === "ArrowLeft") goTo(current - 1);
+                if (e.key === "Enter" && current === TOTAL - 1) window.location.href = AUCTION_URL;
+            });
+
+            // ---------- Data population ----------
+            const escapeHtml = (str) => String(str == null ? "" : str)
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            function isImage(logo) {
+                return typeof logo === "string" && (logo.startsWith("/") || logo.startsWith("http") || logo.startsWith("data:"));
+            }
+
+            function renderState(state) {
+                const settings = state.settings || {};
+                const tournament = settings.tournament_name || settings.auction_name || "Tournament";
+                const brand = settings.auction_name || "BASCH";
+
+                document.getElementById("brandName").textContent = brand;
+                document.getElementById("welcomeTournament").textContent = tournament;
+                document.getElementById("welcomeChip").textContent = tournament;
+                document.title = `Welcome — ${tournament}`;
+
+                renderTeams(state.teams || []);
+                renderCategories(state.categories || [], state.players || []);
+                renderRules(state, settings);
+                refreshIcons();
+            }
+
+            function renderTeams(teams) {
+                const list = document.getElementById("obTeamsList");
+                document.getElementById("teamCount").textContent = teams.length;
+                if (!teams.length) {
+                    list.innerHTML = `<div class="ob-empty-note">No teams configured yet.</div>`;
+                    return;
+                }
+                list.innerHTML = teams.map(t => {
+                    const color = t.color || "#2563EB";
+                    const logo = isImage(t.logo)
+                        ? `<img class="ob-team-logo" src="${escapeHtml(t.logo)}" alt="" onerror="this.replaceWith(document.createTextNode(''))">`
+                        : `<span class="ob-team-logo">${escapeHtml(t.logo || "🏆")}</span>`;
+                    return `<div class="ob-team-row" style="border-left-color:${escapeHtml(color)}">
+                        ${logo}
+                        <span class="ob-team-name">${escapeHtml(t.name)}</span>
+                    </div>`;
+                }).join("");
+            }
+
+            function renderCategories(categories, players) {
+                const grid = document.getElementById("obCatsGrid");
+                // Group players by category id
+                const byCat = {};
+                players.forEach(p => {
+                    const key = p.category_id == null ? "none" : p.category_id;
+                    (byCat[key] = byCat[key] || []).push(p);
+                });
+
+                // Show up to 4 category sections (as required by design)
+                let cats = categories.slice();
+                if (cats.length < 4) {
+                    while (cats.length < 4) cats.push(null); // placeholder empty sections
+                }
+                cats = cats.slice(0, 4);
+
+                grid.innerHTML = cats.map(c => {
+                    if (!c) {
+                        return `<div class="ob-cat-card" style="border-top-color:var(--border-color)">
+                            <div class="ob-cat-head">
+                                <span class="ob-cat-dot" style="background:var(--border-color)"></span>
+                                <span class="ob-cat-name" style="color:var(--text-muted)">Category</span>
+                            </div>
+                            <div class="ob-cat-players"><span class="ob-empty-note">Not configured</span></div>
+                        </div>`;
+                    }
+                    const color = c.color || "#2563EB";
+                    const catPlayers = byCat[c.id] || [];
+                    const pills = catPlayers.length
+                        ? catPlayers.map(p => `<span class="ob-player-pill">${escapeHtml(p.name)}</span>`).join("")
+                        : `<span class="ob-empty-note">No players in this category yet.</span>`;
+                    return `<div class="ob-cat-card" style="border-top-color:${escapeHtml(color)}">
+                        <div class="ob-cat-head">
+                            <span class="ob-cat-dot" style="background:${escapeHtml(color)}"></span>
+                            <span class="ob-cat-name">${escapeHtml(c.name)}</span>
+                            <span class="ob-cat-count">${catPlayers.length}</span>
+                        </div>
+                        <div class="ob-cat-players">${pills}</div>
+                    </div>`;
+                }).join("");
+            }
+
+            function renderRules(state, settings) {
+                const coin = settings.currency_icon || "🪙";
+                const budget = settings.starting_coins != null ? Number(settings.starting_coins).toLocaleString() : "—";
+                const increments = Array.isArray(settings.bid_increments) && settings.bid_increments.length
+                    ? settings.bid_increments.join(", ") : "as configured";
+                const teamCount = (state.teams || []).length;
+                const catCount = (state.categories || []).length;
+
+                const groups = [
+                    {
+                        icon: "wallet",
+                        title: "Budget & Currency",
+                        items: [
+                            `Each team starts with a fixed budget of <strong>${budget} ${coin}</strong>.`,
+                            `All bids are placed in ${escapeHtml(settings.currency_name || "coins")} (${coin}).`,
+                            `A team can never bid more coins than it currently has remaining.`
+                        ]
+                    },
+                    {
+                        icon: "layout-grid",
+                        title: "Squad Composition",
+                        items: [
+                            `There are <strong>${teamCount} teams</strong> competing across <strong>${catCount} player categories</strong>.`,
+                            `Each team must fill one slot in every category to complete its squad.`,
+                            `Players are auctioned one at a time in category order.`
+                        ]
+                    },
+                    {
+                        icon: "gavel",
+                        title: "Bidding Process",
+                        items: [
+                            `Bidding starts at each player's base price.`,
+                            `Bids increase in increments of <strong>${escapeHtml(String(increments))}</strong> ${coin}.`,
+                            `The highest bidder when the player is marked <strong>SOLD</strong> wins the player.`,
+                            `A player with no bids is marked <strong>Unsold</strong> and may be revisited by the auctioneer.`
+                        ]
+                    },
+                    {
+                        icon: "shield-check",
+                        title: "Fair Play",
+                        items: [
+                            `The auctioneer's decision is final for every sale.`,
+                            `Once a player is sold, the winning team's coins are deducted immediately.`,
+                            `Bidding must stop as soon as a player is declared sold.`
+                        ]
+                    }
+                ];
+
+                document.getElementById("obRules").innerHTML = groups.map(g => `
+                    <div class="ob-rule-group">
+                        <h3><i data-lucide="${g.icon}"></i>${escapeHtml(g.title)}</h3>
+                        <ul class="ob-rule-list">
+                            ${g.items.map(it => `<li>${it}</li>`).join("")}
+                        </ul>
+                    </div>
+                `).join("");
+            }
+
+            // Init
+            goTo(0);
+            fetch("/api/state/")
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(renderState)
+                .catch(() => { refreshIcons(); });
+        })();
+    </script>
+</body>
+
+</html>

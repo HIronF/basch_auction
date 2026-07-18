@@ -8,6 +8,9 @@ from django.db import transaction
 from django.core.management import call_command
 from .models import Category, Team, Player, AuctionSettings, BidHistory
 
+def onboarding_view(request):
+    return render(request, "onboarding.html")
+
 def index_view(request):
     return render(request, "index.html")
 

@@ -91,19 +91,625 @@
             transform: translateY(0);
         }
 
-        /* ---------- Screen 1: Welcome ---------- */
-        .ob-welcome {
+        /* ---------- Screen 1: Welcome (full-bleed poster) ---------- */
+        body.onboarding-body.ob-welcome-mode {
+            background: #000;
+        }
+
+        body.onboarding-body.ob-welcome-mode .ob-topbar {
+            display: none;
+        }
+
+        body.onboarding-body.ob-welcome-mode .ob-footer {
+            position: fixed;
+            inset: auto 0 0 auto;
+            z-index: 20;
+            padding: 28px 36px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        body.onboarding-body.ob-welcome-mode .ob-dots,
+        body.onboarding-body.ob-welcome-mode .ob-step-label,
+        body.onboarding-body.ob-welcome-mode #btnBack {
+            display: none !important;
+        }
+
+        body.onboarding-body.ob-welcome-mode .ob-footer-actions {
+            margin-left: 0;
+            pointer-events: auto;
+        }
+
+        body.onboarding-body.ob-welcome-mode #btnNext {
+            width: 64px;
+            height: 64px;
+            background: #F4B400;
+            color: #0B1220;
+            border: none;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        body.onboarding-body.ob-welcome-mode #btnNext:hover {
+            background: #FFD54A;
+            transform: scale(1.05);
+        }
+
+        body.onboarding-body.ob-welcome-mode .ob-viewport {
+            position: fixed;
+            inset: 0;
+        }
+
+        /* ---------- Screen 3: Rules (full-bleed poster) ---------- */
+        body.onboarding-body.ob-rules-mode {
+            background: #000;
+        }
+
+        body.onboarding-body.ob-rules-mode .ob-topbar {
+            display: none;
+        }
+
+        body.onboarding-body.ob-rules-mode .ob-viewport {
+            position: fixed;
+            inset: 0;
+        }
+
+        body.onboarding-body.ob-rules-mode .ob-footer {
+            position: fixed;
+            inset: auto 0 0 0;
+            z-index: 20;
+            padding: 28px 36px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        body.onboarding-body.ob-rules-mode .ob-dots,
+        body.onboarding-body.ob-rules-mode .ob-step-label {
+            display: none !important;
+        }
+
+        body.onboarding-body.ob-rules-mode .ob-footer-actions {
+            margin-left: auto;
+            pointer-events: auto;
+            gap: 12px;
+        }
+
+        body.onboarding-body.ob-rules-mode #btnBack {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: rgba(248, 250, 252, 0.28);
+            color: #f8fafc;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        body.onboarding-body.ob-rules-mode #btnContinue {
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        body.onboarding-body.ob-rules-mode #btnContinue {
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ---------- Screen 4: Captain Assignment ---------- */
+        body.onboarding-body.ob-captains-mode {
+            background: #F3F5F8;
+            --desk-navy: #1E3A8A;
+            --desk-lime: #84CC16;
+            --desk-lime-dark: #65A30D;
+            --desk-gold: #B45309;
+        }
+
+        body.onboarding-body.ob-captains-mode .ob-topbar {
+            display: none;
+        }
+
+        body.onboarding-body.ob-captains-mode .ob-viewport {
+            position: fixed;
+            inset: 0;
+        }
+
+        body.onboarding-body.ob-captains-mode .ob-footer {
+            position: fixed;
+            inset: auto 0 0 0;
+            z-index: 30;
+            padding: 14px 24px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        body.onboarding-body.ob-captains-mode .ob-dots,
+        body.onboarding-body.ob-captains-mode .ob-step-label {
+            display: none !important;
+        }
+
+        body.onboarding-body.ob-captains-mode .ob-footer-actions {
+            margin-left: auto;
+            pointer-events: auto;
+            gap: 10px;
+        }
+
+        body.onboarding-body.ob-captains-mode #btnBack {
+            background: #FFFFFF;
+            border-color: #CBD5E1;
+            color: #1E3A8A;
+        }
+
+        body.onboarding-body.ob-captains-mode #btnContinue {
+            background: #84CC16;
+            border-color: #65A30D;
+            color: #14532D;
+            font-weight: 800;
+        }
+
+        .ob-captains {
+            padding: 0 !important;
+            color: #0F172A;
+            background: #F3F5F8;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cap-top {
+            flex-shrink: 0;
+            display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 16px;
+            padding: 12px 22px 8px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .cap-top-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cap-reset-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1.5px solid #FCA5A5;
+            background: #FEF2F2;
+            color: #B91C1C;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .cap-reset-btn:hover {
+            background: #FEE2E2;
+            border-color: #EF4444;
+            color: #991B1B;
+        }
+
+        .cap-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+        }
+
+        .cap-brand img {
+            height: 38px;
+            width: auto;
+        }
+
+        .cap-brand strong {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: #1E3A8A;
+        }
+
+        .cap-brand span {
+            font-size: 0.6rem;
+            color: #65A30D;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        .cap-titles {
+            flex: 1;
             text-align: center;
         }
 
-        .ob-welcome-logo {
-            height: 92px;
-            width: auto;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.10));
-            animation: obPop 0.6s ease both;
+        .cap-titles h1 {
+            margin: 0;
+            font-family: var(--font-subheading);
+            font-style: italic;
+            font-weight: 900;
+            font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+            letter-spacing: 0.06em;
+            color: #1E3A8A;
+            text-transform: uppercase;
+        }
+
+        .cap-titles p {
+            margin: 2px 0 0;
+            color: #65A30D;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            font-size: 0.8rem;
+        }
+
+        .cap-progress-wrap {
+            flex-shrink: 0;
+            padding: 10px 22px 12px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .cap-progress-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748B;
+            font-weight: 700;
+        }
+
+        .cap-progress-meta strong {
+            color: #4D7C0F;
+            font-size: 0.85rem;
+        }
+
+        .cap-progress-track {
+            height: 8px;
+            border-radius: 999px;
+            background: #E2E8F0;
+            overflow: hidden;
+        }
+
+        .cap-progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #4D7C0F, #65A30D);
+            transition: width 0.25s ease;
+        }
+
+        .cap-body {
+            flex: 1;
+            min-height: 0;
+            padding: 16px 22px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .cap-panel {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+        }
+
+        .cap-panel-head {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: #B45309;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #E2E8F0;
+            background: #FFFBEB;
+        }
+
+        .cap-panel-head .cap-count {
+            margin-left: auto;
+            background: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FCD34D;
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+        }
+
+        .cap-teams-list,
+        .cap-players-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .cap-team-row,
+        .cap-slot-row {
+            --team-color: #1E3A8A;
+            --team-ink: color-mix(in srgb, var(--team-color) 52%, #0F172A);
+            position: relative;
+            flex: 0 0 auto;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+            border: 1.5px solid #E2E8F0;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .cap-team-row {
+            border-left: 6px solid var(--team-ink);
+        }
+
+        .cap-team-row.has-captain,
+        .cap-slot-row.has-captain {
+            border-color: color-mix(in srgb, var(--team-ink) 45%, #CBD5E1);
+            box-shadow: 0 4px 14px color-mix(in srgb, var(--team-ink) 12%, transparent);
+            background: #FFFFFF;
+        }
+
+        .cap-team-row.sparkle,
+        .cap-slot-row.sparkle {
+            animation: capSparkle 0.9s ease;
+        }
+
+        @keyframes capSparkle {
+            0% { transform: scale(1); box-shadow: 0 0 0 transparent; }
+            35% {
+                transform: scale(1.015);
+                box-shadow:
+                    0 0 0 2px #D97706,
+                    0 8px 22px rgba(217, 119, 6, 0.18);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 14px color-mix(in srgb, var(--team-ink) 12%, transparent);
+            }
+        }
+
+        .cap-team-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 14px;
+            object-fit: contain;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            padding: 3px;
+            flex-shrink: 0;
+        }
+
+        .cap-team-logo-fallback {
+            width: 72px;
+            height: 72px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            background: #EFF6FF;
+            border: 1px solid #DBEAFE;
+            flex-shrink: 0;
+        }
+
+        .cap-team-index {
+            width: 2.2ch;
+            font-family: var(--font-number);
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--team-ink);
+            flex-shrink: 0;
+        }
+
+        .cap-team-name {
+            flex: 1;
+            min-width: 0;
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--team-ink);
+            text-shadow: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cap-slot-row {
+            justify-content: space-between;
+            border-left: 6px solid var(--team-ink);
+            overflow: visible;
+        }
+
+        .cap-slot-meta {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .cap-slot-label {
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--team-ink);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .cap-slot-captain {
+            display: block;
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            text-transform: uppercase;
+            color: #1E3A8A;
+            letter-spacing: 0.02em;
+            line-height: 1.15;
+        }
+
+        .cap-slot-captain.is-empty {
+            color: #64748B;
+            font-style: normal;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .cap-slot-captain.flash-name {
+            animation: capNameFlash 0.9s ease;
+        }
+
+        @keyframes capNameFlash {
+            0%, 100% { color: #1E3A8A; text-shadow: none; }
+            40% {
+                color: #B45309;
+                text-shadow: 0 0 12px rgba(217, 119, 6, 0.25);
+            }
+        }
+
+        .cap-assign-btn {
+            position: relative;
+            flex-shrink: 0;
+            border: 1.5px solid #D97706;
+            background: #FFFBEB;
+            color: #92400E;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 0.88rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cap-assign-btn:hover,
+        .cap-slot-row.open .cap-assign-btn {
+            background: #FEF3C7;
+            border-color: #B45309;
+            color: #78350F;
+        }
+
+        .cap-picker {
+            position: absolute;
+            right: 14px;
+            top: calc(100% - 8px);
+            z-index: 12;
+            min-width: 260px;
+            max-height: min(240px, 40vh);
+            overflow-y: auto;
+            background: #FFFFFF;
+            border: 1px solid #F59E0B;
+            border-radius: 12px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+            padding: 6px;
+            display: none;
+        }
+
+        .cap-slot-row.open .cap-picker {
+            display: block;
+        }
+
+        .cap-slot-row.open:nth-last-child(-n+2) .cap-picker {
+            top: auto;
+            bottom: calc(100% - 8px);
+        }
+
+        .cap-picker-item {
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: transparent;
+            color: #1E3A8A;
+            padding: 12px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .cap-picker-item:hover {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .cap-picker-empty {
+            padding: 12px;
+            color: #64748B;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .cap-footer-note {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 8px 22px 68px;
+            color: #64748B;
+            font-size: 0.85rem;
+        }
+
+        .cap-footer-note strong {
+            color: #B45309;
+        }
+
+        @media (max-width: 980px) {
+            .cap-body {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+        }
+
+        .ob-rules {
+            padding: 0 !important;
+            background: #000;
+        }
+
+        .ob-rules-poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            background: #000;
+        }
+
+        .ob-welcome {
+            padding: 0 !important;
+            background: #000;
+        }
+
+        .ob-welcome-poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            background: #000;
         }
 
         .ob-eyebrow {
@@ -116,48 +722,7 @@
             margin-bottom: 18px;
         }
 
-        .ob-welcome h1 {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: clamp(2.1rem, 4.5vw, 3.4rem);
-            color: var(--text-primary);
-            line-height: 1.1;
-            max-width: 16ch;
-            margin-bottom: 20px;
-        }
-
-        .ob-welcome h1 em {
-            font-style: italic;
-            color: var(--accent-gold-dark);
-        }
-
-        .ob-welcome p {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
-            max-width: 52ch;
-            line-height: 1.7;
-        }
-
-        .ob-tournament-chip {
-            margin-top: 26px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-radius: 999px;
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            font-family: var(--font-subheading);
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .ob-tournament-chip i {
-            color: var(--accent-gold-dark);
-        }
-
-        /* ---------- Slide heading (screens 2 & 3) ---------- */
+        /* ---------- Slide heading (screen 3) ---------- */
         .ob-slide-head {
             flex-shrink: 0;
             margin-bottom: 18px;
@@ -180,172 +745,481 @@
             font-size: 0.95rem;
         }
 
-        /* ---------- Screen 2: Overview ---------- */
-        .ob-overview-grid {
-            flex: 1;
-            min-height: 0;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 22px;
+        /* ---------- Screen 2: Overview (dark sports desk) ---------- */
+        body.onboarding-body.ob-overview-mode {
+            background: #020617;
         }
 
-        .ob-panel {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
+        body.onboarding-body.ob-overview-mode .ob-topbar {
+            display: none;
         }
 
-        .ob-panel-title {
-            flex-shrink: 0;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-color);
-            font-family: var(--font-subheading);
-            font-weight: 700;
-            font-size: 0.78rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        body.onboarding-body.ob-overview-mode .ob-viewport {
+            position: fixed;
+            inset: 0;
         }
 
-        .ob-panel-title .count {
+        body.onboarding-body.ob-overview-mode .ob-footer {
+            position: fixed;
+            inset: auto 0 0 0;
+            z-index: 30;
+            padding: 14px 24px;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        body.onboarding-body.ob-overview-mode .ob-dots,
+        body.onboarding-body.ob-overview-mode .ob-step-label {
+            display: none !important;
+        }
+
+        body.onboarding-body.ob-overview-mode .ob-footer-actions {
             margin-left: auto;
-            background: var(--bg-subtle);
-            color: var(--text-secondary);
-            border-radius: 999px;
-            padding: 2px 10px;
-            font-family: var(--font-number);
-            font-size: 0.72rem;
+            pointer-events: auto;
+            gap: 10px;
         }
 
-        .ob-teams-scroll {
-            overflow-y: auto;
-            padding: 12px;
+        body.onboarding-body.ob-overview-mode #btnBack {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(248, 250, 252, 0.28);
+            color: #f8fafc;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        body.onboarding-body.ob-overview-mode #btnNext {
+            width: 56px;
+            height: 56px;
+            background: #F4B400;
+            color: #0B1220;
+            border: none;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .ob-overview {
+            padding: 0 !important;
+            color: #f8fafc;
+            background:
+                radial-gradient(ellipse 70% 45% at 50% -5%, rgba(37, 99, 235, 0.28), transparent 60%),
+                radial-gradient(ellipse 40% 35% at 0% 40%, rgba(14, 165, 233, 0.08), transparent 55%),
+                radial-gradient(ellipse 40% 35% at 100% 60%, rgba(244, 180, 0, 0.07), transparent 55%),
+                #020617;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            overflow: hidden;
         }
 
-        .ob-team-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-left-width: 4px;
-        }
-
-        .ob-team-logo {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            object-fit: contain;
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            padding: 3px;
+        .ov-top {
             flex-shrink: 0;
+            text-align: center;
+            padding: 16px 32px 12px;
+            background: transparent;
+            border-bottom: none;
+        }
+
+        .ov-ball {
+            display: none;
+        }
+
+        .ov-champ-title {
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(1.2rem, 2.4vw, 1.85rem);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #f8fafc;
+            text-shadow: 0 0 28px rgba(148, 163, 184, 0.35);
+            margin: 0 0 6px;
+            line-height: 1.15;
+        }
+
+        .ov-tagline {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-        }
-
-        .ob-team-name {
+            gap: 14px;
+            color: #F4B400;
             font-family: var(--font-subheading);
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-weight: 800;
+            font-size: 0.78rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
         }
 
-        /* Categories: 4 equal sections */
-        .ob-cats-grid {
+        .ov-tagline::before,
+        .ov-tagline::after {
+            content: "";
+            width: 72px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #F4B400, transparent);
+        }
+
+        .ov-body {
             flex: 1;
             min-height: 0;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: minmax(280px, 26%) 1fr;
             gap: 16px;
+            padding: 14px 20px 0;
         }
 
-        .ob-cat-card {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent-primary);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
+        .ov-teams-panel {
+            background: rgba(8, 13, 24, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 16px;
+            padding: 12px;
+            min-height: 0;
             display: flex;
             flex-direction: column;
-            min-height: 0;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
         }
 
-        .ob-cat-head {
-            flex-shrink: 0;
-            padding: 12px 16px;
+        .ov-teams-title {
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #F4B400;
+            padding: 6px 8px 12px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            margin-bottom: 10px;
         }
 
-        .ob-cat-dot {
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
+        .ov-teams-title i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .ov-teams-list {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: repeat(6, minmax(0, 1fr));
+            gap: 6px;
+            padding: 0 2px 2px;
+        }
+
+        .ov-team-row {
+            --team-color: #38bdf8;
+            --team-ink: color-mix(in srgb, var(--team-color) 58%, #F8FAFC);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px;
+            min-height: 0;
+            height: 100%;
+            border-radius: 12px;
+            background: rgba(10, 16, 30, 0.95);
+            border: 1.5px solid color-mix(in srgb, var(--team-color) 45%, transparent);
+            border-left: 6px solid var(--team-color);
+            cursor: pointer;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            overflow: hidden;
+        }
+
+        .ov-team-row:hover {
+            transform: translateX(2px);
+            border-color: color-mix(in srgb, var(--team-color) 70%, transparent);
+        }
+
+        .ov-team-row.active {
+            border-color: var(--team-color);
+            box-shadow:
+                0 0 0 1px color-mix(in srgb, var(--team-color) 55%, transparent),
+                0 0 22px color-mix(in srgb, var(--team-color) 28%, transparent);
+            background: rgba(15, 23, 42, 0.98);
+        }
+
+        .ov-team-logo {
+            width: clamp(52px, 8vh, 76px);
+            height: clamp(52px, 8vh, 76px);
+            border-radius: 12px;
+            object-fit: contain;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid color-mix(in srgb, var(--team-color) 35%, transparent);
+            padding: 2px;
             flex-shrink: 0;
         }
 
-        .ob-cat-name {
+        .ov-team-logo-fallback {
+            width: clamp(52px, 8vh, 76px);
+            height: clamp(52px, 8vh, 76px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 2.4vh, 1.8rem);
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid color-mix(in srgb, var(--team-color) 35%, transparent);
+            flex-shrink: 0;
+        }
+
+        .ov-team-num {
+            font-family: var(--font-number);
+            font-weight: 800;
+            font-size: clamp(1.1rem, 2vh, 1.3rem);
+            letter-spacing: 0.04em;
+            color: var(--team-ink);
+            flex-shrink: 0;
+            min-width: 2.2ch;
+        }
+
+        .ov-team-name {
+            flex: 1;
+            min-width: 0;
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(1rem, 1.8vh, 1.35rem);
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #f8fafc;
+            line-height: 1.12;
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ov-section-head {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 4px 24px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ov-main {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ov-page-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-style: italic;
+            font-size: clamp(1.15rem, 2vw, 1.55rem);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin: 0;
+            color: #f8fafc;
+            text-align: center;
+        }
+
+        .ov-page-title::before,
+        .ov-page-title::after {
+            content: "";
+            width: min(72px, 7vw);
+            height: 2px;
+            flex-shrink: 0;
+            background: linear-gradient(90deg, transparent, #F4B400, transparent);
+            box-shadow: 0 0 10px rgba(244, 180, 0, 0.45);
+        }
+
+        .ov-page-sub {
+            margin: 6px 0 0;
+            max-width: 720px;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(226, 232, 240, 0.7);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .ov-cats-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .ov-cat-card {
+            --cat-color: #22c55e;
+            --cat-ink: color-mix(in srgb, var(--cat-color) 55%, #F8FAFC);
+            background: rgba(8, 13, 24, 0.85);
+            border: 1.5px solid color-mix(in srgb, var(--cat-color) 55%, transparent);
+            border-top: 4px solid var(--cat-color);
+            border-radius: 14px;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 12px 12px 10px;
+            box-shadow:
+                0 0 18px color-mix(in srgb, var(--cat-color) 14%, transparent),
+                0 10px 28px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .ov-cat-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 2px 10px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            margin-bottom: 10px;
+        }
+
+        .ov-cat-ball {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: var(--cat-color);
+            box-shadow: 0 0 12px color-mix(in srgb, var(--cat-color) 65%, transparent);
+        }
+
+        .ov-cat-name {
+            font-family: var(--font-subheading);
+            font-weight: 900;
+            font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #f8fafc;
+        }
+
+        .ov-cat-count {
+            margin-left: auto;
             font-family: var(--font-subheading);
             font-weight: 800;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-        }
-
-        .ob-cat-count {
-            margin-left: auto;
-            font-family: var(--font-number);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            background: var(--bg-subtle);
-            border-radius: 999px;
-            padding: 2px 9px;
-        }
-
-        .ob-cat-players {
-            overflow-y: auto;
-            padding: 10px 14px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            align-content: flex-start;
-        }
-
-        .ob-player-pill {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 999px;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             padding: 5px 12px;
-            white-space: nowrap;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid color-mix(in srgb, var(--cat-color) 40%, transparent);
+            color: var(--cat-ink);
         }
 
-        .ob-empty-note {
-            font-size: 0.82rem;
-            color: var(--text-muted);
+        .ov-player-grid {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .ov-player-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            min-height: 0;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: rgba(5, 10, 20, 0.9);
+            border: 1px solid color-mix(in srgb, var(--cat-color) 35%, transparent);
+        }
+
+        .ov-player-num {
+            font-family: var(--font-number);
+            font-weight: 800;
+            font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+            color: var(--cat-ink);
+            flex-shrink: 0;
+            min-width: 2.2ch;
+        }
+
+        .ov-player-meta {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .ov-player-name {
+            font-family: var(--font-subheading);
+            font-weight: 900;
             font-style: italic;
+            font-size: clamp(1rem, 1.8vh, 1.35rem);
+            color: #f8fafc;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            line-height: 1.12;
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ov-player-line {
+            display: none;
+        }
+
+        .ov-empty-note {
+            grid-column: 1 / -1;
+            font-size: 0.82rem;
+            color: rgba(148, 163, 184, 0.8);
+            font-style: italic;
+            padding: 12px 4px;
+        }
+
+        .ov-bottom {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 12px 24px 68px;
+            background: transparent;
+            border-top: none;
+            margin-top: 14px;
+        }
+
+        .ov-bottom-slogan {
+            font-family: var(--font-subheading);
+            font-weight: 800;
+            font-size: clamp(0.78rem, 1.3vw, 0.92rem);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #e2e8f0;
+        }
+
+        .ov-bottom-slogan em {
+            font-style: normal;
+            color: #F4B400;
+        }
+
+        .ov-bolt {
+            display: none;
+        }
+
+        @media (max-width: 980px) {
+            .ov-body {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+
+            .ov-cats-grid {
+                grid-template-rows: none;
+                grid-auto-rows: minmax(200px, auto);
+            }
+
+            .ov-champ-title {
+                margin: 0 0 6px;
+            }
         }
 
         /* ---------- Screen 3: Rules ---------- */
@@ -502,23 +1376,12 @@
                 padding-right: 20px;
             }
 
-            .ob-overview-grid {
-                grid-template-columns: 1fr;
-                grid-auto-rows: minmax(0, auto);
-                overflow-y: auto;
+            .ob-welcome {
+                padding: 0 !important;
             }
 
-            .ob-teams-scroll {
-                max-height: 220px;
-            }
-
-            .ob-cats-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: none;
-            }
-
-            .ob-cat-card {
-                min-height: 160px;
+            .ob-overview {
+                padding: 0 !important;
             }
         }
     </style>
@@ -541,49 +1404,102 @@
         <div class="ob-viewport">
             <!-- Screen 1: Welcome -->
             <section class="ob-slide ob-welcome active" data-slide="0">
-                <img class="ob-welcome-logo" src="/static/assets/basch-logo.png" alt="Logo"
-                    onerror="this.style.display='none'">
-                <div class="ob-eyebrow">Welcome</div>
-                <h1>Welcome to the <em id="welcomeTournament">Tournament</em> Auction</h1>
-                <p>Get ready to build your dream squad. Review the teams, player categories and
-                    auction rules before the bidding goes live.</p>
-                <div class="ob-tournament-chip">
-                    <i data-lucide="trophy"></i>
-                    <span id="welcomeChip">Team Championship</span>
-                </div>
+                <img class="ob-welcome-poster" src="/static/assets/welcome-poster.png"
+                    alt="Welcome to the Teams Auction">
             </section>
 
             <!-- Screen 2: Team & Player Categories Overview -->
-            <section class="ob-slide" data-slide="1">
-                <div class="ob-slide-head">
-                    <div class="ob-eyebrow">Overview</div>
-                    <h2>Teams &amp; Player Categories</h2>
-                    <p>All participating teams and the players available in each category.</p>
+            <section class="ob-slide ob-overview" data-slide="1">
+                <div class="ov-top">
+                    <span class="ov-ball ov-ball-left" aria-hidden="true"></span>
+                    <span class="ov-ball ov-ball-right" aria-hidden="true"></span>
+                    <h1 class="ov-champ-title" id="ovChampTitle">CS TENNIS ACADEMY TEAM CHAMPIONSHIP 2026</h1>
+                    <div class="ov-tagline" id="ovTagline">ONE ACADEMY. SIX TEAMS. ONE CHAMPION.</div>
                 </div>
-                <div class="ob-overview-grid">
-                    <!-- Left: Teams list -->
-                    <div class="ob-panel">
-                        <div class="ob-panel-title">
-                            <i data-lucide="shield" class="lucide"></i>
+                <div class="ov-section-head">
+                    <h2 class="ov-page-title" id="ovPageTitle">TEAMS &amp; PLAYER CATEGORIES</h2>
+                    <p class="ov-page-sub" id="ovPageSub">ALL PARTICIPATING TEAMS AND PLAYERS AVAILABLE IN EACH CATEGORY.</p>
+                </div>
+                <div class="ov-body">
+                    <aside class="ov-teams-panel">
+                        <div class="ov-teams-title">
+                            <i data-lucide="users"></i>
                             Teams
-                            <span class="count" id="teamCount">0</span>
                         </div>
-                        <div class="ob-teams-scroll" id="obTeamsList"></div>
+                        <div class="ov-teams-list" id="obTeamsList"></div>
+                    </aside>
+                    <div class="ov-main">
+                        <div class="ov-cats-grid" id="obCatsGrid"></div>
                     </div>
-                    <!-- Right: 4 category cards -->
-                    <div class="ob-cats-grid" id="obCatsGrid"></div>
+                </div>
+                <div class="ov-bottom">
+                    <span class="ov-bolt ov-bolt-left" aria-hidden="true"></span>
+                    <span class="ov-bolt ov-bolt-right" aria-hidden="true"></span>
+                    <div class="ov-bottom-slogan" id="ovFooterSlogan">
+                        BUILD YOUR SQUAD. <em>BID FOR GLORY.</em> PLAY FOR THE TITLE.
+                    </div>
                 </div>
             </section>
 
             <!-- Screen 3: Auction Rules -->
-            <section class="ob-slide" data-slide="2">
-                <div class="ob-slide-head">
-                    <div class="ob-eyebrow">Before we begin</div>
-                    <h2>Auction Rules</h2>
-                    <p>Please read the rules carefully. Scroll to review everything.</p>
+            <section class="ob-slide ob-rules" data-slide="2">
+                <img class="ob-rules-poster" src="/static/assets/auction-rules.png"
+                    alt="Auction Rules &amp; Regulations">
+            </section>
+
+            <!-- Screen 4: Captain Assignment -->
+            <section class="ob-slide ob-captains" data-slide="3">
+                <div class="cap-top">
+                    <div class="cap-brand">
+                        <img src="/static/assets/basch-logo.png" alt="" onerror="this.style.display='none'">
+                        <div>
+                            <strong>CS TENNIS ACADEMY</strong>
+                            <span>ESTD. 2009</span>
+                        </div>
+                    </div>
+                    <div class="cap-titles">
+                        <h1>CHAMPIONSHIP 2026</h1>
+                        <p>CAPTAIN ASSIGNMENT</p>
+                    </div>
+                    <div class="cap-top-actions">
+                        <button type="button" class="cap-reset-btn" id="btnResetCaptains" title="Clear all captain assignments">
+                            <i data-lucide="rotate-ccw"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="ob-rules-wrap">
-                    <div class="ob-rules-scroll" id="obRules"></div>
+
+                <div class="cap-progress-wrap">
+                    <div class="cap-progress-meta">
+                        <span>Captain Assignment Progress</span>
+                        <strong id="capProgressLabel">0 OF 6 TEAMS ASSIGNED</strong>
+                    </div>
+                    <div class="cap-progress-track">
+                        <div class="cap-progress-fill" id="capProgressFill"></div>
+                    </div>
+                </div>
+
+                <div class="cap-body">
+                    <div class="cap-panel">
+                        <div class="cap-panel-head">
+                            <i data-lucide="users"></i>
+                            <span>Teams</span>
+                            <span class="cap-count" id="capTeamCount">6</span>
+                        </div>
+                        <div class="cap-teams-list" id="captainTeamsList"></div>
+                    </div>
+                    <div class="cap-panel">
+                        <div class="cap-panel-head">
+                            <i data-lucide="crown"></i>
+                            <span>Captains</span>
+                            <span class="cap-count" id="capPlayerCount">6</span>
+                        </div>
+                        <div class="cap-players-list" id="captainPlayersList"></div>
+                    </div>
+                </div>
+
+                <div class="cap-footer-note" id="capHint">
+                    Click <strong>Assign Captain</strong> next to a team, then pick an Advanced (Captain) player from the dropdown.
                 </div>
             </section>
         </div>
@@ -594,8 +1510,9 @@
                 <span class="ob-dot active"></span>
                 <span class="ob-dot"></span>
                 <span class="ob-dot"></span>
+                <span class="ob-dot"></span>
             </div>
-            <span class="ob-step-label" id="stepLabel">Step 1 of 3</span>
+            <span class="ob-step-label" id="stepLabel">Step 1 of 4</span>
 
             <div class="ob-footer-actions">
                 <button id="btnBack" class="btn btn-outline ob-btn-lg hidden">
@@ -606,8 +1523,8 @@
                     <i data-lucide="arrow-right"></i>
                 </button>
                 <button id="btnContinue" class="btn btn-success ob-btn-lg hidden">
-                    <i data-lucide="gavel"></i>
-                    <span>Start Auction</span>
+                    <i data-lucide="check-circle"></i>
+                    <span>Confirm Captains</span>
                 </button>
             </div>
         </div>
@@ -617,8 +1534,11 @@
         (function () {
             "use strict";
             const AUCTION_URL = "/auction/";
-            const TOTAL = 3;
+            const TOTAL = 4;
             let current = 0;
+            let auctionState = null;
+            /** @type {Record<number, number>} teamId -> playerId */
+            const captainAssignments = {};
 
             const slides = Array.from(document.querySelectorAll(".ob-slide"));
             const dots = Array.from(document.querySelectorAll(".ob-dot"));
@@ -640,164 +1560,356 @@
                 const isLast = current === TOTAL - 1;
                 btnNext.classList.toggle("hidden", isLast);
                 btnContinue.classList.toggle("hidden", !isLast);
+                document.body.classList.toggle("ob-welcome-mode", current === 0);
+                document.body.classList.toggle("ob-overview-mode", current === 1);
+                document.body.classList.toggle("ob-rules-mode", current === 2);
+                document.body.classList.toggle("ob-captains-mode", current === 3);
+                if (current === 3) renderCaptainScreen();
                 refreshIcons();
             }
 
             btnNext.addEventListener("click", () => goTo(current + 1));
             btnBack.addEventListener("click", () => goTo(current - 1));
-            btnContinue.addEventListener("click", () => { window.location.href = AUCTION_URL; });
+            btnContinue.addEventListener("click", confirmCaptainsAndStart);
+
+            const btnResetCaptains = document.getElementById("btnResetCaptains");
+            if (btnResetCaptains) {
+                btnResetCaptains.addEventListener("click", () => {
+                    if (!confirm("Clear all captain assignments on this screen?")) return;
+                    Object.keys(captainAssignments).forEach(k => delete captainAssignments[k]);
+                    activeCaptainTeamId = null;
+                    sparkleTeamId = null;
+                    const hint = document.getElementById("capHint");
+                    if (hint) {
+                        hint.innerHTML = `Click <strong>Assign Captain</strong> next to a team, then pick an Advanced (Captain) player from the dropdown.`;
+                        hint.style.color = "";
+                    }
+                    renderCaptainScreen();
+                });
+            }
 
             document.addEventListener("keydown", (e) => {
-                if (e.key === "ArrowRight") goTo(current + 1);
+                if (e.key === "ArrowRight" && current < TOTAL - 1) goTo(current + 1);
                 if (e.key === "ArrowLeft") goTo(current - 1);
-                if (e.key === "Enter" && current === TOTAL - 1) window.location.href = AUCTION_URL;
             });
 
-            // ---------- Data population ----------
+            let activeCaptainTeamId = null;
+            let sparkleTeamId = null;
+
             const escapeHtml = (str) => String(str == null ? "" : str)
                 .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-            function isImage(logo) {
-                return typeof logo === "string" && (logo.startsWith("/") || logo.startsWith("http") || logo.startsWith("data:"));
+            function isImage(path) {
+                return typeof path === "string" && path.trim() !== "" &&
+                    (path.startsWith("/") || path.startsWith("http") || path.startsWith("data:"));
+            }
+
+            function pad2(n) {
+                return String(n).padStart(2, "0");
+            }
+
+            function formatFooterSlogan(text) {
+                const raw = String(text || "BUILD YOUR SQUAD. BID FOR GLORY. PLAY FOR THE TITLE.");
+                return escapeHtml(raw).replace(/BID FOR GLORY\./i, "<em>BID FOR GLORY.</em>");
+            }
+
+            document.addEventListener("click", (e) => {
+                if (!e.target.closest(".cap-slot-row")) {
+                    document.querySelectorAll(".cap-slot-row.open").forEach(r => r.classList.remove("open"));
+                    activeCaptainTeamId = null;
+                }
+            });
+
+            function getAdvancedPlayers() {
+                if (!auctionState) return [];
+                return (auctionState.players || []).filter(p => {
+                    const n = (p.category_name || "").toLowerCase();
+                    return n === "advanced" || n.startsWith("advanced");
+                });
+            }
+
+            function getAssignedPlayerIds() {
+                return new Set(Object.values(captainAssignments).map(Number));
+            }
+
+            function getTeamById(id) {
+                return ((auctionState && auctionState.teams) || []).find(t => t.id === id);
+            }
+
+            function assignCaptain(teamId, playerId) {
+                Object.keys(captainAssignments).forEach(tid => {
+                    if (Number(captainAssignments[tid]) === playerId) {
+                        delete captainAssignments[tid];
+                    }
+                });
+                captainAssignments[teamId] = playerId;
+                activeCaptainTeamId = null;
+                sparkleTeamId = teamId;
+                renderCaptainScreen();
+            }
+
+            function playAssignSparkle(teamId) {
+                const teamRow = document.querySelector(`.cap-team-row[data-team-id="${teamId}"]`);
+                const slotRow = document.querySelector(`.cap-slot-row[data-team-id="${teamId}"]`);
+                const nameEl = slotRow && slotRow.querySelector(".cap-slot-captain");
+                [teamRow, slotRow].forEach(el => {
+                    if (!el) return;
+                    el.classList.remove("sparkle");
+                    void el.offsetWidth;
+                    el.classList.add("sparkle");
+                });
+                if (nameEl) {
+                    nameEl.classList.remove("flash-name");
+                    void nameEl.offsetWidth;
+                    nameEl.classList.add("flash-name");
+                }
+                window.setTimeout(() => {
+                    [teamRow, slotRow].forEach(el => el && el.classList.remove("sparkle"));
+                    if (nameEl) nameEl.classList.remove("flash-name");
+                }, 950);
+            }
+
+            function renderCaptainScreen() {
+                const teamsList = document.getElementById("captainTeamsList");
+                const playersList = document.getElementById("captainPlayersList");
+                if (!teamsList || !playersList || !auctionState) return;
+
+                const teams = auctionState.teams || [];
+                const advanced = getAdvancedPlayers();
+
+                teams.forEach(t => {
+                    if (captainAssignments[t.id]) return;
+                    const owned = advanced.find(p => p.sold_to_id === t.id && p.status === "Sold");
+                    if (owned) captainAssignments[t.id] = owned.id;
+                });
+
+                const assignedCount = Object.keys(captainAssignments).length;
+                const pct = teams.length ? Math.round((assignedCount / teams.length) * 100) : 0;
+                const fill = document.getElementById("capProgressFill");
+                const label = document.getElementById("capProgressLabel");
+                if (fill) fill.style.width = `${pct}%`;
+                if (label) label.textContent = `${assignedCount} OF ${teams.length} TEAMS ASSIGNED`;
+                document.getElementById("capTeamCount").textContent = teams.length;
+                document.getElementById("capPlayerCount").textContent = teams.length;
+
+                const assignedIds = getAssignedPlayerIds();
+                const available = advanced.filter(p => !assignedIds.has(p.id));
+
+                teamsList.innerHTML = teams.map((t, i) => {
+                    const color = t.color || "#38bdf8";
+                    const playerId = captainAssignments[t.id];
+                    const captain = playerId ? advanced.find(p => p.id === playerId) : null;
+                    const logo = isImage(t.logo)
+                        ? `<img class="cap-team-logo" src="${escapeHtml(t.logo)}" alt="${escapeHtml(t.name)}" onerror="this.outerHTML='<span class=\\'cap-team-logo-fallback\\'>🏆</span>'">`
+                        : `<span class="cap-team-logo-fallback">🏆</span>`;
+                    return `<div class="cap-team-row${captain ? " has-captain" : ""}" data-team-id="${t.id}" style="--team-color:${escapeHtml(color)}">
+                        ${logo}
+                        <span class="cap-team-index">${pad2(i + 1)}</span>
+                        <span class="cap-team-name">${escapeHtml(t.name)}</span>
+                    </div>`;
+                }).join("");
+
+                playersList.innerHTML = teams.map((t, i) => {
+                    const color = t.color || "#38bdf8";
+                    const playerId = captainAssignments[t.id];
+                    const captain = playerId ? advanced.find(p => p.id === playerId) : null;
+                    const isOpen = activeCaptainTeamId === t.id;
+                    const pickerPool = captain
+                        ? [captain, ...available.filter(p => p.id !== captain.id)]
+                        : available;
+                    const pickerItems = pickerPool.length
+                        ? pickerPool.map(p =>
+                            `<button type="button" class="cap-picker-item" data-player-id="${p.id}">${escapeHtml(p.name)}</button>`
+                        ).join("")
+                        : `<div class="cap-picker-empty">No unassigned captains left</div>`;
+
+                    return `<div class="cap-slot-row${captain ? " has-captain" : ""}${isOpen ? " open" : ""}" data-team-id="${t.id}" style="--team-color:${escapeHtml(color)}">
+                        <div class="cap-slot-meta">
+                            <span class="cap-slot-label">${pad2(i + 1)} · ${escapeHtml(t.name)}</span>
+                            <span class="cap-slot-captain${captain ? "" : " is-empty"}">${captain ? escapeHtml(captain.name) : "No captain assigned"}</span>
+                        </div>
+                        <button type="button" class="cap-assign-btn" data-action="pick">
+                            ${captain ? "Change Captain" : "Assign Captain"}
+                        </button>
+                        <div class="cap-picker">${pickerItems}</div>
+                    </div>`;
+                }).join("");
+
+                playersList.querySelectorAll(".cap-slot-row").forEach(row => {
+                    const teamId = Number(row.dataset.teamId);
+                    const btn = row.querySelector("[data-action='pick']");
+                    btn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        const wasOpen = row.classList.contains("open");
+                        playersList.querySelectorAll(".cap-slot-row").forEach(r => r.classList.remove("open"));
+                        if (!wasOpen) {
+                            activeCaptainTeamId = teamId;
+                            row.classList.add("open");
+                            const team = getTeamById(teamId);
+                            const hint = document.getElementById("capHint");
+                            if (hint && team) {
+                                hint.innerHTML = `Choose a captain for <strong>${escapeHtml(team.name)}</strong> from the dropdown.`;
+                                hint.style.color = "";
+                            }
+                        } else {
+                            activeCaptainTeamId = null;
+                        }
+                    });
+                    row.querySelectorAll(".cap-picker-item").forEach(item => {
+                        item.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            assignCaptain(teamId, Number(item.dataset.playerId));
+                        });
+                    });
+                });
+
+                if (sparkleTeamId != null) {
+                    const id = sparkleTeamId;
+                    sparkleTeamId = null;
+                    requestAnimationFrame(() => playAssignSparkle(id));
+                }
+
+                refreshIcons();
+            }
+
+            async function confirmCaptainsAndStart() {
+                const teams = (auctionState && auctionState.teams) || [];
+                const missing = teams.filter(t => !captainAssignments[t.id]);
+                if (missing.length) {
+                    const hint = document.getElementById("capHint");
+                    if (hint) {
+                        hint.innerHTML = `Please assign captains for: <strong>${missing.map(t => t.name).join(", ")}</strong>`;
+                        hint.style.color = "#F87171";
+                    }
+                    return;
+                }
+
+                const assignments = teams.map(t => ({
+                    team_id: t.id,
+                    player_id: captainAssignments[t.id]
+                }));
+
+                btnContinue.disabled = true;
+                try {
+                    const res = await fetch("/api/assign-captains/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ assignments })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || "Failed to assign captains");
+                    window.location.href = AUCTION_URL;
+                } catch (err) {
+                    const hint = document.getElementById("capHint");
+                    if (hint) {
+                        hint.textContent = err.message || "Could not confirm captains";
+                        hint.style.color = "#F87171";
+                    }
+                    btnContinue.disabled = false;
+                }
+            }
+
+            function renderOverview(roster) {
+                if (!roster) return;
+
+                document.getElementById("ovChampTitle").textContent =
+                    roster.tournament_title || "CS TENNIS ACADEMY TEAM CHAMPIONSHIP 2026";
+                document.getElementById("ovTagline").textContent =
+                    roster.tagline || "ONE ACADEMY. SIX TEAMS. ONE CHAMPION.";
+                document.getElementById("ovPageTitle").textContent =
+                    roster.page_title || "TEAMS & PLAYER CATEGORIES";
+                document.getElementById("ovPageSub").textContent =
+                    roster.page_subtitle || "ALL PARTICIPATING TEAMS AND PLAYERS AVAILABLE IN EACH CATEGORY.";
+                document.getElementById("ovFooterSlogan").innerHTML =
+                    formatFooterSlogan(roster.footer_slogan);
+
+                renderTeams(roster.teams || []);
+                renderCategories(roster.categories || []);
+                refreshIcons();
             }
 
             function renderState(state) {
+                auctionState = state;
                 const settings = state.settings || {};
                 const tournament = settings.tournament_name || settings.auction_name || "Tournament";
                 const brand = settings.auction_name || "BASCH";
 
                 document.getElementById("brandName").textContent = brand;
-                document.getElementById("welcomeTournament").textContent = tournament;
-                document.getElementById("welcomeChip").textContent = tournament;
                 document.title = `Welcome — ${tournament}`;
-
-                renderTeams(state.teams || []);
-                renderCategories(state.categories || [], state.players || []);
-                renderRules(state, settings);
+                if (current === 3) renderCaptainScreen();
                 refreshIcons();
             }
 
             function renderTeams(teams) {
                 const list = document.getElementById("obTeamsList");
-                document.getElementById("teamCount").textContent = teams.length;
                 if (!teams.length) {
-                    list.innerHTML = `<div class="ob-empty-note">No teams configured yet.</div>`;
+                    list.innerHTML = `<div class="ov-empty-note">No teams configured yet. Edit static/data/roster.json</div>`;
                     return;
                 }
-                list.innerHTML = teams.map(t => {
-                    const color = t.color || "#2563EB";
+                list.innerHTML = teams.map((t, i) => {
+                    const color = t.color || "#38bdf8";
                     const logo = isImage(t.logo)
-                        ? `<img class="ob-team-logo" src="${escapeHtml(t.logo)}" alt="" onerror="this.replaceWith(document.createTextNode(''))">`
-                        : `<span class="ob-team-logo">${escapeHtml(t.logo || "🏆")}</span>`;
-                    return `<div class="ob-team-row" style="border-left-color:${escapeHtml(color)}">
+                        ? `<img class="ov-team-logo" src="${escapeHtml(t.logo)}" alt="${escapeHtml(t.name)}" onerror="this.style.display='none'">`
+                        : `<span class="ov-team-logo-fallback">🏆</span>`;
+                    return `<div class="ov-team-row${i === 0 ? " active" : ""}" data-team-index="${i}" style="--team-color:${escapeHtml(color)}">
                         ${logo}
-                        <span class="ob-team-name">${escapeHtml(t.name)}</span>
+                        <span class="ov-team-num">${pad2(i + 1)}</span>
+                        <span class="ov-team-name">${escapeHtml(t.name)}</span>
                     </div>`;
                 }).join("");
+
+                list.querySelectorAll(".ov-team-row").forEach(row => {
+                    row.addEventListener("click", () => {
+                        list.querySelectorAll(".ov-team-row").forEach(r => r.classList.remove("active"));
+                        row.classList.add("active");
+                    });
+                });
             }
 
-            function renderCategories(categories, players) {
+            function renderCategories(categories) {
                 const grid = document.getElementById("obCatsGrid");
-                // Group players by category id
-                const byCat = {};
-                players.forEach(p => {
-                    const key = p.category_id == null ? "none" : p.category_id;
-                    (byCat[key] = byCat[key] || []).push(p);
-                });
-
-                // Show up to 4 category sections (as required by design)
-                let cats = categories.slice();
-                if (cats.length < 4) {
-                    while (cats.length < 4) cats.push(null); // placeholder empty sections
-                }
-                cats = cats.slice(0, 4);
+                let cats = (categories || []).slice(0, 4);
+                while (cats.length < 4) cats.push(null);
 
                 grid.innerHTML = cats.map(c => {
                     if (!c) {
-                        return `<div class="ob-cat-card" style="border-top-color:var(--border-color)">
-                            <div class="ob-cat-head">
-                                <span class="ob-cat-dot" style="background:var(--border-color)"></span>
-                                <span class="ob-cat-name" style="color:var(--text-muted)">Category</span>
+                        return `<div class="ov-cat-card" style="--cat-color:#64748b">
+                            <div class="ov-cat-head">
+                                <span class="ov-cat-ball"></span>
+                                <span class="ov-cat-name" style="color:#64748b">Category</span>
                             </div>
-                            <div class="ob-cat-players"><span class="ob-empty-note">Not configured</span></div>
+                            <div class="ov-player-grid"><div class="ov-empty-note">Not configured</div></div>
                         </div>`;
                     }
-                    const color = c.color || "#2563EB";
-                    const catPlayers = byCat[c.id] || [];
-                    const pills = catPlayers.length
-                        ? catPlayers.map(p => `<span class="ob-player-pill">${escapeHtml(p.name)}</span>`).join("")
-                        : `<span class="ob-empty-note">No players in this category yet.</span>`;
-                    return `<div class="ob-cat-card" style="border-top-color:${escapeHtml(color)}">
-                        <div class="ob-cat-head">
-                            <span class="ob-cat-dot" style="background:${escapeHtml(color)}"></span>
-                            <span class="ob-cat-name">${escapeHtml(c.name)}</span>
-                            <span class="ob-cat-count">${catPlayers.length}</span>
+
+                    const color = c.color || "#3B82F6";
+                    const players = c.players || [];
+                    const cards = players.length
+                        ? players.map((p, i) => `<div class="ov-player-card">
+                                <span class="ov-player-num">${pad2(i + 1)}</span>
+                                <div class="ov-player-meta">
+                                    <span class="ov-player-name">${escapeHtml(p.name)}</span>
+                                </div>
+                            </div>`).join("")
+                        : `<div class="ov-empty-note">No players in this category yet.</div>`;
+
+                    return `<div class="ov-cat-card" style="--cat-color:${escapeHtml(color)}">
+                        <div class="ov-cat-head">
+                            <span class="ov-cat-ball"></span>
+                            <span class="ov-cat-name">${escapeHtml(c.name)}</span>
+                            <span class="ov-cat-count">${players.length} PLAYERS</span>
                         </div>
-                        <div class="ob-cat-players">${pills}</div>
+                        <div class="ov-player-grid">${cards}</div>
                     </div>`;
                 }).join("");
-            }
-
-            function renderRules(state, settings) {
-                const coin = settings.currency_icon || "🪙";
-                const budget = settings.starting_coins != null ? Number(settings.starting_coins).toLocaleString() : "—";
-                const increments = Array.isArray(settings.bid_increments) && settings.bid_increments.length
-                    ? settings.bid_increments.join(", ") : "as configured";
-                const teamCount = (state.teams || []).length;
-                const catCount = (state.categories || []).length;
-
-                const groups = [
-                    {
-                        icon: "wallet",
-                        title: "Budget & Currency",
-                        items: [
-                            `Each team starts with a fixed budget of <strong>${budget} ${coin}</strong>.`,
-                            `All bids are placed in ${escapeHtml(settings.currency_name || "coins")} (${coin}).`,
-                            `A team can never bid more coins than it currently has remaining.`
-                        ]
-                    },
-                    {
-                        icon: "layout-grid",
-                        title: "Squad Composition",
-                        items: [
-                            `There are <strong>${teamCount} teams</strong> competing across <strong>${catCount} player categories</strong>.`,
-                            `Each team must fill one slot in every category to complete its squad.`,
-                            `Players are auctioned one at a time in category order.`
-                        ]
-                    },
-                    {
-                        icon: "gavel",
-                        title: "Bidding Process",
-                        items: [
-                            `Bidding starts at each player's base price.`,
-                            `Bids increase in increments of <strong>${escapeHtml(String(increments))}</strong> ${coin}.`,
-                            `The highest bidder when the player is marked <strong>SOLD</strong> wins the player.`,
-                            `A player with no bids is marked <strong>Unsold</strong> and may be revisited by the auctioneer.`
-                        ]
-                    },
-                    {
-                        icon: "shield-check",
-                        title: "Fair Play",
-                        items: [
-                            `The auctioneer's decision is final for every sale.`,
-                            `Once a player is sold, the winning team's coins are deducted immediately.`,
-                            `Bidding must stop as soon as a player is declared sold.`
-                        ]
-                    }
-                ];
-
-                document.getElementById("obRules").innerHTML = groups.map(g => `
-                    <div class="ob-rule-group">
-                        <h3><i data-lucide="${g.icon}"></i>${escapeHtml(g.title)}</h3>
-                        <ul class="ob-rule-list">
-                            ${g.items.map(it => `<li>${it}</li>`).join("")}
-                        </ul>
-                    </div>
-                `).join("");
             }
 
             // Init
             goTo(0);
+            fetch("/static/data/roster.json")
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(renderOverview)
+                .catch(() => { refreshIcons(); });
             fetch("/api/state/")
                 .then(r => r.ok ? r.json() : Promise.reject(r))
                 .then(renderState)

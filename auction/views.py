@@ -428,6 +428,119 @@ def undo_bid(request):
 
     return JsonResponse(get_serialized_state())
 
+
+@csrf_exempt
+@transaction.atomic
+def assign_captains(request):
+    """Assign Advanced-category players as team captains (sold at base price)."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body or "{}")
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    assignments = data.get("assignments") or []
+    if not assignments:
+        return JsonResponse({"error": "No assignments provided"}, status=400)
+
+    advanced_qs = Category.objects.filter(name__istartswith="Advanced")
+    if not advanced_qs.exists():
+        return JsonResponse({"error": "Advanced category not found"}, status=400)
+
+    # Reset any previous Advanced captain sales so re-confirm works
+    for player in Player.objects.filter(category__in=advanced_qs, status="Sold"):
+        team = player.sold_to
+        if team:
+            team.coins += player.sold_price or 0
+            if team.captain == player.name:
+                team.captain = ""
+            team.save()
+        player.sold_to = None
+        player.sold_price = 0
+        player.status = "Upcoming"
+        player.save()
+
+    used_players = set()
+    used_teams = set()
+
+    for item in assignments:
+        team_id = item.get("team_id")
+        player_id = item.get("player_id")
+        if team_id is None or player_id is None:
+            return JsonResponse({"error": "Each assignment needs team_id and player_id"}, status=400)
+        if team_id in used_teams:
+            return JsonResponse({"error": "Each team can only have one captain"}, status=400)
+        if player_id in used_players:
+            return JsonResponse({"error": "Each captain can only be assigned once"}, status=400)
+
+        team = get_object_or_404(Team, id=team_id)
+        player = get_object_or_404(Player, id=player_id)
+
+        cat_name = (player.category.name if player.category else "").lower()
+        if not player.category or not cat_name.startswith("advanced"):
+            return JsonResponse({"error": f"{player.name} is not an Advanced player"}, status=400)
+        if player.status == "Sold" and player.sold_to_id not in (None, team.id):
+            return JsonResponse({"error": f"{player.name} is already sold"}, status=400)
+
+        # Captains are assigned free — teams keep full starting coins for the auction
+        team.captain = player.name
+        team.save()
+
+        player.sold_to = team
+        player.sold_price = 0
+        player.status = "Sold"
+        player.save()
+
+        used_teams.add(team_id)
+        used_players.add(player_id)
+
+    # Captains are free — every team enters the auction with full starting coins
+    for team in Team.objects.filter(id__in=used_teams):
+        team.coins = team.starting_coins
+        team.save()
+
+    settings = AuctionSettings.objects.first()
+    if settings:
+        # Ensure the live desk player is not an Advanced captain
+        cur = settings.current_player
+        cur_is_advanced = bool(
+            cur and cur.category and (cur.category.name or "").lower().startswith("advanced")
+        )
+        needs_new = (
+            not cur
+            or cur.status != "Live"
+            or cur_is_advanced
+        )
+        if needs_new:
+            if cur and cur.status == "Live" and cur_is_advanced:
+                cur.status = "Upcoming"
+                cur.save()
+
+            next_player = (
+                Player.objects.filter(status="Upcoming")
+                .exclude(category__name__istartswith="Advanced")
+                .order_by("auction_order")
+                .first()
+            )
+            if not next_player:
+                next_player = Player.objects.filter(status="Upcoming").order_by("auction_order").first()
+
+            if next_player:
+                next_player.status = "Live"
+                next_player.save()
+                settings.current_player = next_player
+                settings.current_category = next_player.category
+                settings.highest_bid = next_player.base_price
+                settings.highest_bidder = None
+                settings.auction_status = "LIVE"
+                settings.timer_remaining = settings.timer
+                settings.save()
+
+    return JsonResponse(get_serialized_state())
+
+
 @csrf_exempt
 @transaction.atomic
 def undo_sold(request):

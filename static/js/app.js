@@ -133,7 +133,6 @@ class Application {
         if (!overlay) return;
         this._celebrating = true;
 
-        document.getElementById("soldCelebPhoto").src = player.photo || "";
         document.getElementById("soldCelebPlayer").textContent = (player.name || "").toUpperCase();
         document.getElementById("soldCelebCategory").textContent = (player.category_name || "").toUpperCase();
         document.getElementById("soldCelebTeam").textContent = (team.name || "").toUpperCase();
@@ -152,7 +151,7 @@ class Application {
         overlay.classList.remove("hidden");
         overlay.classList.add("show");
         this.soundHammer();
-        this.burstConfetti(2000);
+        this.burstConfetti(2800);
 
         const flyer = document.getElementById("flyingPlayerCard");
         const photoEl = document.getElementById("activePlayerPhoto");
@@ -182,9 +181,9 @@ class Application {
 
         setTimeout(() => {
             this.animateCoins(coinsBefore, coinsAfter, coinEl, 900);
-        }, 400);
+        }, 600);
 
-        await new Promise(r => setTimeout(r, 2200));
+        await new Promise(r => setTimeout(r, 4000));
 
         overlay.classList.remove("show");
         overlay.classList.add("hidden");
@@ -198,6 +197,8 @@ class Application {
     soundError() { this.playTone(200, 0.3, "sawtooth"); }
 
     showToast(message, type = "success") {
+        // Suppress informational toasts (bid updates, etc.) — keep errors only
+        if (type !== "error") return;
         const container = document.getElementById("toastContainer");
         if (!container) return;
         const toast = document.createElement("div");
@@ -253,6 +254,13 @@ class Application {
         try { if (typeof Render.progressBar === "function") Render.progressBar(this.state); } catch (e) { console.warn("Render.progressBar error:", e); }
         try {
             if (typeof Render.categoryTabs === "function") {
+                const advanced = (this.state.categories || []).find(c => {
+                    const n = (c.name || "").toLowerCase();
+                    return n === "advanced" || n.startsWith("advanced");
+                });
+                if (advanced && this.selectedCategoryId === advanced.id) {
+                    this.selectedCategoryId = null;
+                }
                 Render.categoryTabs(this.state, this.selectedCategoryId, (catId) => {
                     this.handleCategorySelect(catId);
                 });
@@ -294,9 +302,12 @@ class Application {
             }
         } catch (e) { console.warn("Render.upcomingSlider error:", e); }
 
-        // Check if tournament completed
-        if (this.state.settings && this.state.settings.auction_status === "COMPLETED" && this.state.players.length > 0) {
-            this.showFinalSummary();
+        // Check if tournament completed — show CTA button (user opens final teams)
+        const completeBar = document.getElementById("auctionCompleteBar");
+        if (completeBar) {
+            const done = this.state.settings && this.state.settings.auction_status === "COMPLETED" && this.state.players.length > 0;
+            completeBar.classList.toggle("hidden", !done);
+            if (done && window.lucide) lucide.createIcons();
         }
     }
 
@@ -630,6 +641,21 @@ class Application {
             });
         }
 
+        const showFinalBtn = document.getElementById("btnShowFinalTeams");
+        if (showFinalBtn) {
+            showFinalBtn.addEventListener("click", () => this.showFinalSummary());
+        }
+        const closeFinalBtn = document.getElementById("btnCloseFinalTeams");
+        if (closeFinalBtn) {
+            closeFinalBtn.addEventListener("click", () => this.hideFinalSummary());
+        }
+        const finalOverlay = document.getElementById("finalTeamsOverlay");
+        if (finalOverlay) {
+            finalOverlay.addEventListener("click", (e) => {
+                if (e.target === finalOverlay) this.hideFinalSummary();
+            });
+        }
+
         // Global Search Bar
         const searchInput = document.getElementById("globalSearchInput");
         const searchDropdown = document.getElementById("searchResultsDropdown");
@@ -679,21 +705,29 @@ class Application {
                 e.preventDefault();
                 const unsoldBtn = document.getElementById("btnMarkUnsold");
                 if (unsoldBtn) unsoldBtn.click();
+            } else if (e.key === "Escape") {
+                this.hideFinalSummary();
             }
         });
     }
 
     showFinalSummary() {
-        const modal = document.getElementById("finalSummaryModal");
-        if (modal && modal.classList.contains("hidden")) {
-            const st = this.state.statistics;
-            document.getElementById("sumMostExpensivePlayer").textContent = st.most_expensive_player;
-            document.getElementById("sumMostExpensivePrice").textContent = st.most_expensive_price.toLocaleString();
-            document.getElementById("sumRichestTeam").textContent = st.richest_team;
-            document.getElementById("sumRichestTeamCoins").textContent = `${this.state.settings.currency_icon} ${st.richest_team_coins} remaining`;
-            modal.classList.remove("hidden");
-            this.soundSold();
+        const overlay = document.getElementById("finalTeamsOverlay");
+        if (!overlay) return;
+        if (typeof Render.finalTeams === "function") {
+            Render.finalTeams(this.state);
         }
+        overlay.classList.remove("hidden");
+        overlay.setAttribute("aria-hidden", "false");
+        this.soundSold();
+        if (window.lucide) lucide.createIcons();
+    }
+
+    hideFinalSummary() {
+        const overlay = document.getElementById("finalTeamsOverlay");
+        if (!overlay) return;
+        overlay.classList.add("hidden");
+        overlay.setAttribute("aria-hidden", "true");
     }
 }
 

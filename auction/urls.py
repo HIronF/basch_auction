@@ -28,6 +28,7 @@ urlpatterns = [
     path("unsold/", views.mark_unsold, name="mark_unsold"),
     path("undo-bid/", views.undo_bid, name="undo_bid"),
     path("undo-sold/", views.undo_sold, name="undo_sold"),
+    path("assign-captains/", views.assign_captains, name="assign_captains"),
 
     # Settings
     path("settings/", views.settings_detail, name="settings_detail"),

@@ -1,0 +1,103 @@
+{
+  "tournament_title": "CS TENNIS ACADEMY TEAM CHAMPIONSHIP 2026",
+  "tagline": "ONE ACADEMY. SIX TEAMS. ONE CHAMPION.",
+  "page_title": "TEAMS & PLAYER CATEGORIES",
+  "page_subtitle": "ALL PARTICIPATING TEAMS AND PLAYERS AVAILABLE IN EACH CATEGORY.",
+  "footer_slogan": "BUILD YOUR SQUAD. BID FOR GLORY. PLAY FOR THE TITLE.",
+  "settings": {
+    "auction_name": "Player Auction",
+    "tournament_name": "CS Tennis Academy Team Championship 2026",
+    "sport_name": "Lawn Tennis",
+    "starting_coins": 1000,
+    "timer": 30,
+    "bid_increments": "10,20,50,100,150,200",
+    "currency_name": "Coins",
+    "currency_icon": "🪙"
+  },
+  "teams": [
+    {
+      "name": "Baseline Warriors",
+      "logo": "/static/assets/teams/baseline_warriors.png",
+      "color": "#0369A1"
+    },
+    {
+      "name": "Alley Assassins",
+      "logo": "/static/assets/teams/alley_assassins.png",
+      "color": "#4D7C0F"
+    },
+    {
+      "name": "Net Dominators",
+      "logo": "/static/assets/teams/net_dominators.png",
+      "color": "#B45309"
+    },
+    {
+      "name": "Center Court Kings",
+      "logo": "/static/assets/teams/center_court_kings.png",
+      "color": "#C2410C"
+    },
+    {
+      "name": "Rally Rebels",
+      "logo": "/static/assets/teams/rally_rebels.png",
+      "color": "#6B21A8"
+    },
+    {
+      "name": "Topspin Titans",
+      "logo": "/static/assets/teams/topspin_titans.png",
+      "color": "#0E7490"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Junior Players",
+      "color": "#4D7C0F",
+      "player_limit": 6,
+      "players": [
+        { "name": "Samar Samantha", "photo": "", "base_price": 100 },
+        { "name": "Aarav Mukkamala", "photo": "", "base_price": 100 },
+        { "name": "Nirvaan Nagrani", "photo": "", "base_price": 100 },
+        { "name": "Rudra Singh Bisht", "photo": "", "base_price": 100 },
+        { "name": "Samit", "photo": "", "base_price": 100 },
+        { "name": "Daksh Puri", "photo": "", "base_price": 100 }
+      ]
+    },
+    {
+      "name": "Intermediate A",
+      "color": "#0369A1",
+      "player_limit": 6,
+      "players": [
+        { "name": "Abhishek Lowanshi", "photo": "", "base_price": 100 },
+        { "name": "Vishal Adkar", "photo": "", "base_price": 100 },
+        { "name": "Amit Beria", "photo": "", "base_price": 100 },
+        { "name": "Sushant Shetty", "photo": "", "base_price": 100 },
+        { "name": "Bhaven Kakade", "photo": "", "base_price": 100 },
+        { "name": "Amit Nandy", "photo": "", "base_price": 100 }
+      ]
+    },
+    {
+      "name": "Intermediate B",
+      "color": "#C2410C",
+      "player_limit": 6,
+      "players": [
+        { "name": "Anupam Mohanty", "photo": "", "base_price": 150 },
+        { "name": "Balwant Singh Bisht", "photo": "", "base_price": 150 },
+        { "name": "Ratul", "photo": "", "base_price": 150 },
+        { "name": "Keshav Birdi", "photo": "", "base_price": 150 },
+        { "name": "Mehul Karkera", "photo": "", "base_price": 150 },
+        { "name": "Karan Gupta", "photo": "", "base_price": 150 }
+      ]
+    },
+    {
+      "name": "Advanced (Captain)",
+      "color": "#B91C1C",
+      "player_limit": 6,
+      "players": [
+        { "name": "Avis Samantha", "photo": "", "base_price": 200 },
+        { "name": "Ram Tiruvattar", "photo": "", "base_price": 200 },
+        { "name": "Sunny Parwan", "photo": "", "base_price": 200 },
+        { "name": "Aarya Khanvilkar", "photo": "", "base_price": 200 },
+        { "name": "Balaji", "photo": "", "base_price": 200 },
+        { "name": "Gaurav Patel", "photo": "", "base_price": 200 }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Auction — Lawn Tennis</title>
+    <title>Player Auction — CS Tennis Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,30 +18,35 @@
 
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Compact utility strip -->
-    <div class="utility-strip">
-        <div class="category-tabs-bar" id="categoryTabsBar"></div>
-        <div class="utility-stats">
-            <span>TOTAL PLAYERS: <strong id="statTotalPlayers">24</strong></span>
-            <span class="stat-sep">|</span>
-            <span>BUDGET PER TEAM: <strong id="statBudgetPerTeam">1,000</strong> 🪙</span>
-        </div>
-        <div class="utility-actions">
-            <div class="dropdown-wrapper">
-                <button id="btnResetMenu" class="btn btn-outline btn-sm">
-                    <i data-lucide="rotate-ccw"></i>
-                    <span>Reset Auction</span>
-                </button>
-                <div id="resetDropdown" class="dropdown-menu hidden">
-                    <a href="#" class="dropdown-item" data-reset="all"><i data-lucide="refresh-cw"></i> Reset Entire Auction</a>
-                    <a href="#" class="dropdown-item" data-reset="teams"><i data-lucide="shield"></i> Reset Teams & Squads</a>
-                    <a href="#" class="dropdown-item" data-reset="coins"><i data-lucide="coins"></i> Reset Coins Only</a>
-                </div>
+    <!-- Brand header -->
+    <header class="auction-brand-header">
+        <div class="abh-brand">
+            <img src="/static/assets/basch-logo.png" alt="CS Tennis Academy" class="abh-logo"
+                onerror="this.style.display='none'">
+            <div class="abh-brand-text">
+                <strong>CS TENNIS ACADEMY</strong>
+                <span>ESTD. 2009</span>
             </div>
+        </div>
+        <div class="abh-titles">
+            <h1 id="headerAuctionName">CS TENNIS ACADEMY CHAMPIONSHIP 2026</h1>
+            <p id="headerTournamentSubtitle">PLAYER AUCTION</p>
+        </div>
+        <div class="abh-actions">
             <a href="/admin/" class="btn btn-outline btn-sm" style="text-decoration:none;">
                 <i data-lucide="settings"></i>
                 <span>Admin</span>
             </a>
+        </div>
+    </header>
+
+    <!-- Category tabs -->
+    <div class="auction-cat-row">
+        <div class="category-tabs-bar" id="categoryTabsBar"></div>
+        <div class="utility-stats">
+            <span>TOTAL PLAYERS: <strong id="statTotalPlayers">24</strong></span>
+            <span class="stat-sep">|</span>
+            <span>BUDGET: <strong id="statBudgetPerTeam">1,000</strong> 🪙</span>
         </div>
     </div>
 
@@ -52,8 +57,6 @@
         <button id="btnStartPause"></button>
         <div id="globalProgressBar"></div>
         <span id="globalProgressText"></span>
-        <span id="headerAuctionName"></span>
-        <span id="headerTournamentSubtitle"></span>
         <span id="auctionStatusBadge"></span>
         <span id="timerDisplay"></span>
         <button id="btnExtendTimer"></button>
@@ -65,14 +68,18 @@
     <main class="main-dashboard-grid auction-layout">
         <!-- Left: Teams & Squad -->
         <section class="panel panel-left-teams">
-            <div class="panel-header">
+            <div class="panel-header desk-panel-header">
+                <i data-lucide="users"></i>
                 <h2>Teams &amp; Squad</h2>
             </div>
             <div class="teams-scroll-box" id="teamsContainer"></div>
-            <div class="teams-footer-note">4 players per team (one in each category)</div>
+            <div class="teams-footer-note teams-legend">
+                <span class="legend-item"><span class="legend-dot filled"></span> Filled</span>
+                <span class="legend-item"><span class="legend-dot"></span> Empty</span>
+            </div>
         </section>
 
-        <!-- Center: Active auction -->
+        <!-- Center: Active auction + remaining coins -->
         <section class="panel panel-center-arena" id="centerArenaPanel">
             <div id="noActivePlayerState" class="empty-arena-box">
                 <i data-lucide="award" style="width:64px; height:64px; color:var(--text-muted); stroke-width:1.5px;"></i>
@@ -89,67 +96,99 @@
                 <span id="activePlayerRanking" class="hidden"></span>
                 <span id="activePlayerSeed" class="hidden"></span>
 
-                <div class="arena-player-block">
-                    <img id="activePlayerPhoto" src="" alt="Player" class="arena-player-photo">
-                    <div class="arena-player-meta">
-                        <h2 id="activePlayerName">Player Name</h2>
-                        <div id="activePlayerCategoryBadge" class="arena-cat-badge">Category</div>
-                        <div class="arena-base-price">
-                            <span class="coin-icon">🪙</span>
-                            <span id="activePlayerBasePriceVisible" class="num-font">100</span>
-                            <span class="base-label">Base Price</span>
+                <div class="arena-top-row">
+                    <div class="arena-player-block">
+                        <div class="arena-photo-wrap">
+                            <img id="activePlayerPhoto" src="" alt="Player" class="arena-player-photo"
+                                onerror="this.classList.add('is-empty'); this.removeAttribute('src');">
+                            <div class="arena-photo-fallback" aria-hidden="true">
+                                <i data-lucide="user"></i>
+                            </div>
+                        </div>
+                        <div class="arena-player-meta">
+                            <span class="current-player-pill">CURRENT PLAYER</span>
+                            <h2 id="activePlayerName">Player Name</h2>
+                            <div id="activePlayerCategoryBadge" class="arena-cat-badge">Category</div>
+                            <div class="arena-base-price">
+                                <span class="base-label">BASE PRICE</span>
+                                <span class="coin-icon">🪙</span>
+                                <span id="activePlayerBasePriceVisible" class="num-font">100</span>
+                            </div>
                         </div>
                     </div>
                     <div class="arena-current-bid">
-                        <div class="bid-label">Current Bid</div>
+                        <div class="bid-label">CURRENT BID</div>
                         <div class="bid-value-row">
                             <span id="currentBidAmount" class="num-font">0</span>
+                        </div>
+                        <div class="bid-coins-meta">
+                            <span class="coin-icon">🪙</span>
                             <span class="bid-coins-label">COINS</span>
                         </div>
-                        <div class="bid-leader-row">
-                            <span class="leader-label">Highest Bidder (to be selected)</span>
-                            <div id="highestBidderDisplay" class="leader-team">
-                                <img id="highestBidderLogo" class="leader-logo hidden" src="" alt="">
-                                <span id="highestBidderName">Select a team from the right panel</span>
+                    </div>
+                </div>
+
+                <div class="arena-mid-row">
+                    <div class="arena-highest-bidder">
+                        <div class="bid-label">HIGHEST BIDDER</div>
+                        <div id="highestBidderDisplay" class="leader-team">
+                            <img id="highestBidderLogo" class="leader-logo hidden" src="" alt="">
+                            <div class="leader-meta">
+                                <span id="highestBidderName">Select a team below</span>
+                                <span class="leader-status hidden" id="highestBidderStatus"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="quick-bid-block">
+                        <div class="block-label">QUICK BID</div>
+                        <div id="bidButtonsContainer" class="bid-step-row"></div>
                     </div>
                 </div>
 
                 <div class="arena-controls">
-                    <div class="quick-bid-block">
-                        <div class="block-label">Quick Bid</div>
-                        <div id="bidButtonsContainer" class="bid-step-row"></div>
+                    <div class="custom-bid-block">
+                        <div class="block-label">CUSTOM BID</div>
                         <div class="custom-bid-row">
-                            <input type="number" id="customBidInput" placeholder="Enter custom amount" step="10" min="10">
-                            <button id="btnCustomBid" class="btn btn-primary">UPDATE BID</button>
+                            <div class="custom-bid-input-wrap">
+                                <span class="coin-icon">🪙</span>
+                                <input type="number" id="customBidInput" placeholder="Enter custom amount..." step="10" min="10">
+                            </div>
+                            <button id="btnCustomBid" class="btn btn-primary btn-bid-now">BID NOW</button>
                         </div>
                     </div>
 
-                    <div class="sold-actions">
-                        <button id="btnMarkSold" class="btn-sold">
-                            <i data-lucide="gavel"></i>
-                            <span>SOLD!</span>
-                        </button>
-                        <button id="btnUndoBid" class="btn btn-outline btn-undo-only">Undo Last Bid</button>
+                    <div class="arena-bottom-row">
+                        <div class="remaining-coins-block">
+                            <div class="block-label-row">
+                                <div class="block-label">TEAMS &amp; REMAINING COINS</div>
+                                <span class="badge" id="bidderHint">Click a team to select as highest bidder</span>
+                            </div>
+                            <div id="quickTeamSelectorGrid" class="bidders-list"></div>
+                        </div>
+                        <div class="sold-actions">
+                            <button id="btnMarkSold" class="btn-sold">
+                                <i data-lucide="gavel"></i>
+                                <span>SOLD!</span>
+                            </button>
+                            <button id="btnUndoBid" class="btn-undo-link">Undo Last Bid</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- Right: Teams & Remaining Coins (select winning team) -->
-        <section class="panel panel-right-bidders">
-            <div class="panel-header panel-header-stack">
-                <h2>Teams &amp; Remaining Coins</h2>
-                <span class="badge" id="bidderHint">(Click a team to select as final bidder)</span>
-            </div>
-            <div id="quickTeamSelectorGrid" class="bidders-list"></div>
-            <div class="bidders-footer-note">
-                <i data-lucide="info"></i>
-                Click on a team to select them as the final bidder.
-            </div>
-        </section>
     </main>
+
+    <!-- Completion CTA -->
+    <div id="auctionCompleteBar" class="auction-complete-bar hidden">
+        <div class="acb-text">
+            <strong>Auction complete</strong>
+            <span>All players have been assigned. Review the final squads.</span>
+        </div>
+        <button id="btnShowFinalTeams" class="btn btn-primary btn-show-final">
+            <i data-lucide="trophy"></i>
+            <span>Show Final Teams</span>
+        </button>
+    </div>
 
     <!-- Full-screen SOLD celebration -->
     <div id="soldCelebration" class="sold-celebration hidden" aria-hidden="true">
@@ -157,7 +196,6 @@
         <div class="sold-celebration-card">
             <div class="sold-hammer">🔨</div>
             <div class="sold-banner">SOLD!</div>
-            <img id="soldCelebPhoto" class="sold-celeb-photo" src="" alt="">
             <h2 id="soldCelebPlayer">PLAYER</h2>
             <div id="soldCelebCategory" class="sold-celeb-cat">CATEGORY</div>
             <div class="sold-celeb-team-row">
@@ -183,6 +221,25 @@
         </div>
         <div id="upcomingSlider" class="next-players-track"></div>
     </section>
+
+    <!-- Final Teams overlay -->
+    <div id="finalTeamsOverlay" class="final-teams-overlay hidden" aria-hidden="true">
+        <div class="final-teams-shell">
+            <div class="final-teams-header">
+                <div>
+                    <p class="final-kicker">CS TENNIS ACADEMY CHAMPIONSHIP 2026</p>
+                    <h2>Final Teams</h2>
+                    <p class="final-sub">All squads after the player auction</p>
+                </div>
+                <button id="btnCloseFinalTeams" class="btn btn-outline btn-sm" type="button">
+                    <i data-lucide="x"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+            <div id="finalTeamsGrid" class="final-teams-grid"></div>
+            <div class="final-teams-stats" id="finalTeamsStats"></div>
+        </div>
+    </div>
 
     <!-- Modal: Sold Confirmation -->
     <div id="soldConfirmModal" class="modal-backdrop hidden">

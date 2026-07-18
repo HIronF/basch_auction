@@ -94,6 +94,17 @@ const API = {
         return data;
     },
 
+    async assignCaptains(assignments) {
+        const res = await fetch("/api/assign-captains/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ assignments })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to assign captains");
+        return data;
+    },
+
     // CRUD Teams
     async createTeam(teamData) {
         const res = await fetch("/api/teams/", {

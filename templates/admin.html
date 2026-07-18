@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin & Setup - CS Tennis Academy Pickleball Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .admin-header {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .admin-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .admin-sidebar {
+            width: 240px;
+            background: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .admin-tab-btn {
+            background: transparent;
+            border: none;
+            text-align: left;
+            padding: 11px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s ease;
+        }
+        .admin-tab-btn:hover {
+            background: #F1F5F9;
+            color: var(--text-primary);
+        }
+        .admin-tab-btn.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            font-weight: 600;
+        }
+        .admin-content-area {
+            flex: 1;
+            padding: 32px 48px;
+            overflow-y: auto;
+            background: #F8FAFC;
+        }
+        .admin-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 860px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .admin-card h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.35rem;
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .admin-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            background: #FFFFFF;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2563EB;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+        .crud-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .crud-table th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .crud-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+        .crud-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <header class="admin-header">
+        <div class="admin-brand">
+            <img src="/static/assets/basch-logo.png" class="brand-logo" alt="BASCH">
+            <div>
+                <h3 style="margin:0; font-size:1.1rem; font-family:'Plus Jakarta Sans',sans-serif;">CS Tennis Academy Admin Console</h3>
+                <span style="font-size:0.75rem; color:var(--text-secondary);">Pickleball Tournament Management System</span>
+            </div>
+        </div>
+        <a href="/" class="btn btn-outline" style="text-decoration:none;">
+            <span>← Return to Live Bidding Desk</span>
+        </a>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <button class="admin-tab-btn active" data-atab="general"><i data-lucide="settings"></i><span>General</span></button>
+            <button class="admin-tab-btn" data-atab="teams"><i data-lucide="shield"></i><span>Teams</span></button>
+            <button class="admin-tab-btn" data-atab="players"><i data-lucide="users"></i><span>Players</span></button>
+            <button class="admin-tab-btn" data-atab="categories"><i data-lucide="folder"></i><span>Categories</span></button>
+            <button class="admin-tab-btn" data-atab="auction"><i data-lucide="sliders"></i><span>Auction Settings</span></button>
+            <button class="admin-tab-btn" data-atab="import"><i data-lucide="upload"></i><span>Import Data</span></button>
+            <button class="admin-tab-btn" data-atab="export"><i data-lucide="download"></i><span>Export Data</span></button>
+            <button class="admin-tab-btn" data-atab="settings"><i data-lucide="server"></i><span>System Settings</span></button>
+        </aside>
+
+        <main class="admin-content-area">
+            <!-- Tab 1: General -->
+            <div id="atab-general" class="admin-tab-panel">
+                <div class="admin-card">
+                    <h2>General Tournament Configuration</h2>
+                    <p>Configure overall branding and titles displayed on the header and projector displays.</p>
+                    <form id="generalForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Academy / Organization Title</label>
+                            <input type="text" id="genAuctionName" value="CS Tennis Academy" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tournament Subtitle</label>
+                            <input type="text" id="genTournamentName" value="Team Pickleball Championship 2026" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sport Discipline</label>
+                            <input type="text" id="genSportName" value="Pickleball" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Starting Coins per Team</label>
+                            <input type="number" id="genStartingCoins" value="5000" required>
+                        </div>
+                        <div class="form-group full" style="margin-top:12px;">
+                            <button type="submit" class="btn btn-primary" style="width:fit-content;">Save General Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab 2: Teams -->
+            <div id="atab-teams" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Add Participating Team</h2>
+                    <p>Create teams. Each team owns a distinct color for borders, badges, and accents.</p>
+                    <form id="adminAddTeamForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Team Name</label>
+                            <input type="text" id="tName" placeholder="e.g. Mumbai Aces" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Owned Team Color (Hex)</label>
+                            <input type="color" id="tColor" value="#2563EB" style="height:42px; width:100%; padding:4px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Starting Coins Allocation</label>
+                            <input type="number" id="tCoins" value="5000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Captain Name <span style="font-size:0.75rem; font-weight:500; color:#94A3B8; text-transform:none;">(Optional)</span></label>
+                            <input type="text" id="tCaptain" placeholder="Captain Name">
+                        </div>
+                        <!-- hidden fields kept for JS compatibility -->
+                        <input type="hidden" id="tLogo" value="🏓">
+                        <input type="hidden" id="tCoach" value="">
+                        <div class="form-group full">
+                            <button type="submit" class="btn btn-primary" style="width:fit-content;">+ Create Team</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Existing Teams Roster</h2>
+                    <table class="crud-table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Coins</th>
+                                <th>Squad Size</th>
+                                <th>Color</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTeamsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Players -->
+            <div id="atab-players" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Add New Player into Auction Pool</h2>
+                    <p>Assign players to specific categories and set base prices.</p>
+                    <form id="adminAddPlayerForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Player Full Name</label>
+                            <input type="text" id="pName" placeholder="e.g. Aarav Sharma" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category Division</label>
+                            <select id="pCategorySelect" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Base Price (Coins)</label>
+                            <input type="number" id="pBasePrice" value="150" step="10" required>
+                        </div>
+                        <!-- hidden: ranking/seed not used, default to 1 -->
+                        <input type="hidden" id="pRank" value="1">
+                        <div class="form-group full">
+                            <label>Photo URL <span style="font-size:0.75rem; font-weight:500; color:#94A3B8;">(Optional — leave blank for auto-generated avatar)</span></label>
+                            <input type="url" id="pPhoto" placeholder="https://example.com/photo.jpg">
+                        </div>
+                        <div class="form-group full">
+                            <button type="submit" class="btn btn-primary" style="width:fit-content;">+ Add Player</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Players Directory</h2>
+                    <table class="crud-table">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Category</th>
+                                <th>Base Price</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminPlayersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 4: Categories -->
+            <div id="atab-categories" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Manage Categories & Limits</h2>
+                    <p>Set division limits per team (e.g. max 6 players per team from each category).</p>
+                    <form id="adminAddCategoryForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Category Name</label>
+                            <input type="text" id="cName" placeholder="e.g. Under 12 / Beginners" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category Color Code</label>
+                            <input type="color" id="cColor" value="#3B82F6" style="height:42px; width:100%; padding:4px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Players Per Team Limit</label>
+                            <input type="number" id="cLimit" value="6" required>
+                        </div>
+                        <div class="form-group" style="justify-content:flex-end;">
+                            <button type="submit" class="btn btn-primary" style="height:42px;">+ Add Category</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Active Categories</h2>
+                    <table class="crud-table">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Color</th>
+                                <th>Per-Team Limit</th>
+                                <th>Total Players</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminCategoriesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 5: Auction Settings -->
+            <div id="atab-auction" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Bidding Engine Parameters</h2>
+                    <p>Adjust countdown timers, bid increments, and sound feedback.</p>
+                    <form id="auctionEngineForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Default Timer Duration (Seconds)</label>
+                            <input type="number" id="aucTimer" value="30" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bid Step Increments (Comma separated)</label>
+                            <input type="text" id="aucIncrements" value="10,20,50,100" required>
+                        </div>
+                        <div class="form-group full" style="margin-top:12px;">
+                            <button type="submit" class="btn btn-primary" style="width:fit-content;">Update Engine Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab 6: Import Data -->
+            <div id="atab-import" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Import Tournament State JSON</h2>
+                    <p>Paste a previously exported JSON backup to restore or clone an auction database.</p>
+                    <div class="form-group full">
+                        <textarea id="jsonImportText" rows="10" placeholder='{"settings": {...}, "teams": [...]}' style="font-family:monospace; font-size:0.8rem;"></textarea>
+                    </div>
+                    <button id="btnExecuteImport" class="btn btn-primary" style="margin-top:14px;">Import JSON Database</button>
+                </div>
+            </div>
+
+            <!-- Tab 7: Export Data -->
+            <div id="atab-export" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Export & Backup Auction Data</h2>
+                    <p>Download official spreadsheets or JSON backups of current tournament rosters and sold prices.</p>
+                    <div style="display:flex; gap:16px;">
+                        <a href="/api/export/csv/" class="btn btn-primary" style="text-decoration:none;">📥 Download Results Spreadsheet (.CSV)</a>
+                        <a href="/api/export/json/" class="btn btn-outline" style="text-decoration:none;">📥 Download Complete Database (.JSON)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 8: System Settings -->
+            <div id="atab-settings" class="admin-tab-panel hidden">
+                <div class="admin-card">
+                    <h2>Currency & Display Settings</h2>
+                    <form id="sysSettingsForm" class="form-grid">
+                        <div class="form-group">
+                            <label>Currency Name</label>
+                            <input type="text" id="sysCurrencyName" value="Coins">
+                        </div>
+                        <div class="form-group">
+                            <label>Currency Icon Symbol</label>
+                            <input type="text" id="sysCurrencyIcon" value="💰">
+                        </div>
+                        <div class="form-group full" style="margin-top:12px;">
+                            <button type="submit" class="btn btn-primary" style="width:fit-content;">Save Currency Settings</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Inspect Team Roster right in Admin Console -->
+    <div id="adminRosterModal" class="modal-backdrop hidden">
+        <div class="modal-dialog" style="max-width:620px;">
+            <div class="modal-header">
+                <h3 id="adminRosterTitle">Team Acquired Roster</h3>
+                <button onclick="document.getElementById('adminRosterModal').classList.add('hidden')" class="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body" style="max-height:60vh;overflow-y:auto;padding:20px;">
+                <div id="adminRosterList"></div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="document.getElementById('adminRosterModal').classList.add('hidden')" class="btn btn-outline" style="width:100%;">Close Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script>
+        // Admin page controller
+        let state = null;
+
+        async function loadAdminState() {
+            try {
+                state = await API.fetchState();
+                renderAdminUI();
+            } catch (e) {
+                console.error("Failed to load admin state:", e);
+            }
+        }
+
+        function renderAdminUI() {
+            if (!state) return;
+            const s = state.settings;
+            document.getElementById("genAuctionName").value = s.auction_name;
+            document.getElementById("genTournamentName").value = s.tournament_name;
+            document.getElementById("genSportName").value = s.sport_name;
+            document.getElementById("genStartingCoins").value = s.starting_coins;
+            document.getElementById("aucTimer").value = s.timer;
+            document.getElementById("aucIncrements").value = s.bid_increments.join(",");
+            document.getElementById("sysCurrencyName").value = s.currency_name;
+            document.getElementById("sysCurrencyIcon").value = s.currency_icon;
+
+            // Render Teams Table
+            const teamsBody = document.getElementById("adminTeamsTableBody");
+            teamsBody.innerHTML = state.teams.map(t => `
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:${t.color};flex-shrink:0;"></span>
+                            <strong style="font-size:0.95rem;color:#111827;">${t.name}</strong>
+                        </div>
+                    </td>
+                    <td><span class="num-font">${t.coins.toLocaleString()}</span></td>
+                    <td><strong class="num-font">${t.squad_count}</strong> players</td>
+                    <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:${t.color};vertical-align:middle;"></span> ${t.color}</td>
+                    <td>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <button class="btn btn-outline btn-sm" style="padding:6px 12px;font-size:0.8rem;" onclick="inspectRosterAdmin(${t.id})"><i data-lucide="eye"></i><span>View Roster</span></button>
+                            <button class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:0.8rem;" onclick="deleteTeamAdmin(${t.id})"><i data-lucide="trash-2"></i><span>Delete</span></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join("");
+
+            // Render Categories Table and populate player dropdown
+            const catsBody = document.getElementById("adminCategoriesTableBody");
+            catsBody.innerHTML = state.categories.map(c => `
+                <tr>
+                    <td><strong style="font-size:0.95rem;color:#111827;">${c.name}</strong></td>
+                    <td><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:${c.color};vertical-align:middle;"></span> ${c.color}</td>
+                    <td><span class="num-font">${c.player_limit}</span> per team</td>
+                    <td><span class="num-font">${c.total_count}</span> players</td>
+                    <td><button class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:0.8rem;" onclick="deleteCategoryAdmin(${c.id})"><i data-lucide="trash-2"></i><span>Delete</span></button></td>
+                </tr>
+            `).join("");
+
+            const catSelect = document.getElementById("pCategorySelect");
+            catSelect.innerHTML = state.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+
+            // Render Players Table
+            const playersBody = document.getElementById("adminPlayersTableBody");
+            playersBody.innerHTML = state.players.map(p => `
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <img src="${p.photo}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;border:1px solid var(--border-color);">
+                            <strong style="font-size:0.92rem;color:#111827;">${p.name}</strong>
+                        </div>
+                    </td>
+                    <td>${p.category_name}</td>
+                    <td><span class="num-font">${p.base_price}</span></td>
+                    <td><span class="status-badge status-${p.status.toLowerCase()}">${p.status}</span></td>
+                    <td><button class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:0.8rem;" onclick="deletePlayerAdmin(${p.id})"><i data-lucide="trash-2"></i><span>Delete</span></button></td>
+                </tr>
+            `).join("");
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Tab switcher — persists active tab to URL hash so refresh keeps same tab
+        function switchAdminTab(tabName) {
+            document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".admin-tab-panel").forEach(p => p.classList.add("hidden"));
+            const btn = document.querySelector(`.admin-tab-btn[data-atab="${tabName}"]`);
+            const panel = document.getElementById(`atab-${tabName}`);
+            if (btn) btn.classList.add("active");
+            if (panel) panel.classList.remove("hidden");
+            location.hash = tabName;
+        }
+
+        document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                switchAdminTab(btn.getAttribute("data-atab"));
+            });
+        });
+
+        // Restore tab from URL hash on load
+        const hashTab = location.hash.replace("#", "");
+        if (hashTab && document.querySelector(`.admin-tab-btn[data-atab="${hashTab}"]`)) {
+            switchAdminTab(hashTab);
+        }
+
+        // Form Handlers
+        document.getElementById("generalForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.updateSettings({
+                auction_name: document.getElementById("genAuctionName").value,
+                tournament_name: document.getElementById("genTournamentName").value,
+                sport_name: document.getElementById("genSportName").value,
+                starting_coins: parseInt(document.getElementById("genStartingCoins").value)
+            });
+            showToastAdmin("General settings saved successfully!", "success");
+            await loadAdminState();
+        });
+
+        document.getElementById("auctionEngineForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.updateSettings({
+                timer: parseInt(document.getElementById("aucTimer").value),
+                bid_increments: document.getElementById("aucIncrements").value.split(",").map(x => parseInt(x.trim())).filter(x => !isNaN(x))
+            });
+            showToastAdmin("Auction parameters updated!", "success");
+            await loadAdminState();
+        });
+
+        document.getElementById("sysSettingsForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.updateSettings({
+                currency_name: document.getElementById("sysCurrencyName").value,
+                currency_icon: document.getElementById("sysCurrencyIcon").value
+            });
+            showToastAdmin("System display settings saved!", "success");
+            await loadAdminState();
+        });
+
+        document.getElementById("adminAddTeamForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.createTeam({
+                name: document.getElementById("tName").value,
+                logo: document.getElementById("tLogo").value || "🏓",
+                color: document.getElementById("tColor").value,
+                starting_coins: parseInt(document.getElementById("tCoins").value) || 5000,
+                captain: document.getElementById("tCaptain").value,
+                coach: document.getElementById("tCoach").value
+            });
+            showToastAdmin("Team created successfully!", "success");
+            document.getElementById("adminAddTeamForm").reset();
+            await loadAdminState();
+        });
+
+        document.getElementById("adminAddPlayerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.createPlayer({
+                name: document.getElementById("pName").value,
+                category_id: parseInt(document.getElementById("pCategorySelect").value),
+                base_price: parseInt(document.getElementById("pBasePrice").value) || 150,
+                ranking: parseInt(document.getElementById("pRank").value) || 1,
+                photo: document.getElementById("pPhoto").value
+            });
+            showToastAdmin("Player added into pool!", "success");
+            document.getElementById("adminAddPlayerForm").reset();
+            await loadAdminState();
+        });
+
+        document.getElementById("adminAddCategoryForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await API.createCategory({
+                name: document.getElementById("cName").value,
+                color: document.getElementById("cColor").value,
+                player_limit: parseInt(document.getElementById("cLimit").value) || 6
+            });
+            showToastAdmin("Category created successfully!", "success");
+            document.getElementById("adminAddCategoryForm").reset();
+            await loadAdminState();
+        });
+
+        document.getElementById("btnExecuteImport").addEventListener("click", async () => {
+            const jsonText = document.getElementById("jsonImportText").value.trim();
+            if (!jsonText) return showToastAdmin("Paste JSON content first", "error");
+            if (confirm("Restore this JSON backup into the database?")) {
+                try {
+                    await API.importStateJson(jsonText);
+                    showToastAdmin("Database restored!", "success");
+                    document.getElementById("jsonImportText").value = "";
+                    await loadAdminState();
+                } catch (err) {
+                    showToastAdmin(err.message, "error");
+                }
+            }
+        });
+
+        function inspectRosterAdmin(id) {
+            const team = state.teams.find(t => t.id === id);
+            if (!team) return;
+            const modal = document.getElementById("adminRosterModal");
+            document.getElementById("adminRosterTitle").textContent = `${team.name} — Acquired Roster`;
+            const list = document.getElementById("adminRosterList");
+            if (team.squad.length === 0) {
+                list.innerHTML = `<p style="padding:24px;text-align:center;color:var(--text-muted);">No players currently acquired by this franchise.</p>`;
+            } else {
+                list.innerHTML = team.squad.map(p => `
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border-color);border-radius:8px;background:#FAFAFA;margin-bottom:8px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <img src="${p.photo}" style="width:40px;height:40px;border-radius:6px;object-fit:cover;">
+                            <div>
+                                <strong style="color:#111827;font-size:0.92rem;display:block;">${p.name}</strong>
+                                <span style="font-size:0.78rem;color:var(--text-secondary);">${p.category_name}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <span class="num-font" style="color:#10B981;font-size:0.95rem;font-weight:700;">Sold: ${state.settings.currency_icon || ''} ${p.sold_price}</span>
+                            <button class="btn btn-outline btn-sm" style="padding:4px 8px;font-size:0.75rem;" onclick="unassignPlayerAdmin(${p.id})"><i data-lucide="rotate-ccw"></i><span>Unassign</span></button>
+                        </div>
+                    </div>
+                `).join("");
+            }
+            modal.classList.remove("hidden");
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function unassignPlayerAdmin(playerId) {
+            if (confirm("Unassign this player from the team and return them to the Upcoming pool?")) {
+                await API.updatePlayer(playerId, { status: "Upcoming", sold_to: null, sold_price: 0 });
+                showToastAdmin("Player unassigned", "info");
+                document.getElementById("adminRosterModal").classList.add("hidden");
+                await loadAdminState();
+            }
+        }
+
+        async function deleteTeamAdmin(id) {
+            if (confirm("Delete this team?")) {
+                await API.deleteTeam(id);
+                showToastAdmin("Team deleted", "info");
+                await loadAdminState();
+            }
+        }
+        async function deletePlayerAdmin(id) {
+            if (confirm("Delete this player?")) {
+                await API.deletePlayer(id);
+                showToastAdmin("Player deleted", "info");
+                await loadAdminState();
+            }
+        }
+        async function deleteCategoryAdmin(id) {
+            if (confirm("Delete this category?")) {
+                await API.deleteCategory(id);
+                showToastAdmin("Category deleted", "info");
+                await loadAdminState();
+            }
+        }
+
+        function showToastAdmin(msg, type="success") {
+            const c = document.getElementById("toastContainer");
+            const t = document.createElement("div");
+            t.className = `toast toast-${type}`;
+            t.innerHTML = `<span>${msg}</span>`;
+            c.appendChild(t);
+            setTimeout(() => {
+                t.style.opacity = "0";
+                setTimeout(() => t.remove(), 300);
+            }, 3000);
+        }
+
+        window.addEventListener("DOMContentLoaded", async () => {
+            await loadAdminState();
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

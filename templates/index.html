@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Auction Desk — CS Tennis Academy Pickleball Console</title>
+    <!-- Libre Baskerville, Outfit, Poppins, Inter, Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Lucide Icons (Single clean SVG library) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Header & Top Navigation (SaaS Architecture) -->
+    <header class="app-header">
+        <div class="header-brand">
+            <img src="/static/assets/basch-logo.png" class="brand-logo" alt="BASCH Logo">
+            <div class="header-titles">
+                <div class="title-row">
+                    <h1 id="headerAuctionName">BASCH</h1>
+                    <span id="auctionStatusBadge" class="status-badge hidden" style="display:none;"></span>
+                </div>
+                <p id="headerTournamentSubtitle" style="font-size:0.78rem; color:var(--text-secondary);">Team Pickleball Championship 2026</p>
+            </div>
+        </div>
+
+        <!-- Hidden elements preserved so JS controller runs cleanly -->
+        <div class="hidden" style="display:none;">
+            <input type="text" id="globalSearchInput">
+            <div id="searchResultsDropdown"></div>
+            <button id="btnStartPause"></button>
+        </div>
+
+        <!-- Action Controls & Far-Right Admin -->
+        <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 16px;">
+            <div class="dropdown-wrapper">
+                <button id="btnResetMenu" class="btn btn-outline">
+                    <i data-lucide="rotate-ccw"></i>
+                    <span>Reset</span>
+                </button>
+                <div id="resetDropdown" class="dropdown-menu hidden">
+                    <a href="#" class="dropdown-item" data-reset="all"><i data-lucide="refresh-cw"></i> Reset Entire Auction</a>
+                    <a href="#" class="dropdown-item" data-reset="teams"><i data-lucide="shield"></i> Reset Teams & Squads</a>
+                    <a href="#" class="dropdown-item" data-reset="coins"><i data-lucide="coins"></i> Reset Coins Only</a>
+                </div>
+            </div>
+
+            <a href="/admin/" class="btn btn-outline" style="display: flex; align-items: center; gap: 6px; text-decoration: none; border-color: var(--border-color); color: var(--text-primary); font-weight: 600;">
+                <i data-lucide="settings"></i>
+                <span>Admin</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Global Progress Strip -->
+    <div class="global-progress-strip">
+        <div id="globalProgressBar" class="progress-fill" style="width: 0%;"></div>
+        <span id="globalProgressText" class="progress-text">0 / 0 Players Sold (0%)</span>
+    </div>
+
+    <!-- Category Filter Tabs Bar -->
+    <div class="category-tabs-bar" id="categoryTabsBar">
+        <!-- Dynamically injected category pills -->
+    </div>
+
+    <!-- Main 3-Column Arena Layout (Clean 32px Spacing) -->
+    <main class="main-dashboard-grid">
+        <!-- Left Panel: Compact Teams List (Zero Badge Clutter) -->
+        <section class="panel panel-left-teams">
+            <div class="panel-header">
+                <h2>Teams <span class="badge" id="teamCountBadge">0</span></h2>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Click to inspect squad</span>
+            </div>
+            <div class="teams-scroll-box" id="teamsContainer">
+                <!-- Dynamically injected compact team rows -->
+            </div>
+        </section>
+
+        <!-- Center & Right Panel: Unified Professional Auction Console (50% Player / 50% Current Bid) -->
+        <section class="panel panel-center-arena" id="centerArenaPanel"
+            style="grid-column: 2; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+            <!-- Empty desk state -->
+            <div id="noActivePlayerState" class="empty-arena-box"
+                style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px;">
+                <i data-lucide="award"
+                    style="width:64px; height:64px; color:var(--text-muted); stroke-width:1.5px;"></i>
+                <h3 style="margin-top: 16px; font-size: 1.5rem; color: #111827;">No Player Active on Bidding Desk</h3>
+                <p style="color: var(--text-secondary); margin: 8px 0 16px 0;">Select an upcoming player from the queue
+                    below or click Load Next Player to begin live bidding.</p>
+                <button id="btnLoadNextPlayer" class="btn btn-primary">
+                    <i data-lucide="zap"></i>
+                    <span>Load Next Player to Desk</span>
+                </button>
+            </div>
+
+            <!-- Active Desk Container (50% Player / 50% Current Bid) -->
+            <div id="activeArenaContainer" class="active-arena-box hidden"
+                style="display: grid; grid-template-columns: 1fr 1fr; flex: 1; min-height: 0; overflow: hidden;">
+                <!-- Hidden spans to preserve JS compatibility for rank/seed/base price -->
+                <span id="activePlayerBasePrice" class="hidden"></span>
+                <span id="activePlayerRanking" class="hidden"></span>
+                <span id="activePlayerSeed" class="hidden"></span>
+
+                <!-- LEFT SECTION: PLAYER (50%) -->
+                <div class="console-left-player"
+                    style="padding: 10px 20px 20px 20px; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow-y: auto;">
+                    <div
+                        style="font-size: 11px; font-weight: 700; color: #6B7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+                        ACTIVE PLAYER</div>
+
+                    <!-- Player Card: Photo beside Name & Category -->
+                    <div
+                        style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                        <img id="activePlayerPhoto" src="" alt="Player Photo"
+                            style="width: 100px; height: 100px; border-radius: 14px; object-fit: cover; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); flex-shrink: 0;">
+                        <div style="display: flex; flex-direction: column; justify-content: center; overflow: hidden;">
+                            <h2 id="activePlayerName"
+                                style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 4px 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                Player Name</h2>
+                            <div id="activePlayerCategoryBadge"
+                                style="font-size: 14px; color: #6B7280; font-weight: 500;">Category</div>
+                        </div>
+                    </div>
+
+                    <!-- Bid History Section -->
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-size: 15px; font-weight: 700; color: #111827;">Bid History</span>
+                        <span style="font-size: 12px; color: #6B7280; font-weight: 600;" id="bidHistoryCount">0
+                            Bids</span>
+                    </div>
+                    <div id="bidHistoryList"
+                        style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; min-height: 120px; max-height: 260px;">
+                        <p class="empty-text">No bids placed yet for this player.</p>
+                    </div>
+                </div>
+
+                <!-- RIGHT SECTION: CURRENT BID (50%) -->
+                <div class="console-right-bidding"
+                    style="padding: 10px 20px 20px 20px; display: flex; flex-direction: column; gap: 14px; height: 100%; overflow: hidden;">
+                    <!-- Hidden elements preserved for JS safety -->
+                    <div style="display:none; height:0; overflow:hidden; position:absolute;">
+                        <span id="timerDisplay"></span>
+                        <button id="btnExtendTimer"></button>
+                    </div>
+
+                    <!-- 1. Header & Compact Banner: Current Bid Amount & Leading Team -->
+                    <div>
+                        <div
+                            style="font-size: 13px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">
+                            CURRENT BID</div>
+                        <div
+                            style="background: #F8FAFC; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                            <div style="display: flex; align-items: baseline; gap: 8px;">
+                                <span id="currentBidAmount" class="num-font"
+                                    style="font-size: 48px; font-weight: 800; color: #111827; line-height: 1;">0</span>
+                                <span
+                                    style="font-size: 15px; color: #D97706; font-weight: 700;">🪙 Coins</span>
+                            </div>
+                            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; overflow: hidden;">
+                                <div
+                                    style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">
+                                    Highest Bidder</div>
+                                <div id="highestBidderName"
+                                    style="font-size: 20px; font-weight: 800; font-family: var(--font-heading); line-height: 1.2; color: #9CA3AF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 210px;">
+                                    Waiting for initial bid...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); margin: 2px 0;"></div>
+
+                    <!-- 2. QUICK BID Block -->
+                    <div>
+                        <div
+                            style="font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;">
+                            QUICK BID</div>
+                        <div id="bidButtonsContainer"
+                            style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 12px;">
+                            <!-- Dynamically injected increment buttons -->
+                        </div>
+                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                            <span style="font-size: 13px; font-weight: 600; color: #475569;">Custom Amount</span>
+                            <input type="number" id="customBidInput" placeholder="Amount..." step="10" min="10"
+                                style="padding: 8px 12px; border: 1.5px solid #CBD5E1; border-radius: 8px; font-size: 14px; width: 130px; text-align: center; font-weight: 600; background: #FFFFFF; color: #1E293B;">
+                            <button id="btnCustomBid"
+                                style="background: #2563EB; color: #FFFFFF; font-weight: 600; font-size: 14px; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; transition: all 0.15s; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);">+ Add</button>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); margin: 2px 0;"></div>
+
+                    <!-- 3. SELECT TEAM Block (Stretches to fill space so no scrollbar!) -->
+                    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                        <div
+                            style="font-size: 12px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;">
+                            SELECT TEAM</div>
+                        <div id="quickTeamSelectorGrid"
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding-right: 2px;">
+                            <!-- Dynamically injected quick team buttons -->
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); margin: 2px 0;"></div>
+
+                    <!-- 4. Action Buttons: SOLD and Undo / Mark Unsold -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto;">
+                        <button id="btnMarkSold"
+                            style="width: 100%; height: 54px; background: #047857; color: #FFFFFF; border: none; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25); transition: background 0.15s;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gavel"><path d="m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg>
+                            <span>SOLD</span>
+                        </button>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btnUndoBid"
+                                style="flex: 1; height: 44px; background: #FFFFFF; color: #2563EB; border: 1.5px solid #2563EB; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s;">
+                                Undo Last Bid
+                            </button>
+                            <button id="btnMarkUnsold"
+                                style="flex: 1; height: 44px; background: #FFFFFF; color: #2563EB; border: 1.5px solid #2563EB; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s;"
+                                title="Skip and mark as Unsold">
+                                Mark Unsold
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Players Roster with Dropdown (Upcoming, Sold, Unsold) -->
+        <section class="panel panel-right-queue" id="queueRightPanel"
+            style="grid-column: 3; display: flex; flex-direction: column; overflow: hidden; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+            <div class="panel-header"
+                style="flex-direction: column; align-items: stretch; gap: 10px; padding: 14px 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h2 id="currentQueueTitle"
+                        style="font-size: 13px; font-weight: 800; color: #111827; letter-spacing: 0.05em; text-transform: uppercase;">
+                        Upcoming Players</h2>
+                    <span class="badge" id="queueCountBadge"
+                        style="background: #E5E7EB; color: #111827; font-size: 12px; padding: 2px 8px; border-radius: 999px; font-weight: 700;">0</span>
+                </div>
+                <!-- Dropdown for All 3 Options -->
+                <select id="queueSelectDropdown"
+                    style="width: 100%; padding: 8px 12px; border: 1.5px solid var(--border-color); border-radius: 10px; font-weight: 600; font-size: 13px; background: #F8FAFC; color: #1E293B; cursor: pointer; outline: none; transition: all 0.15s;">
+                    <option value="live">Upcoming Players</option>
+                    <option value="sold">Sold Roster</option>
+                    <option value="unsold">Unsold Pool</option>
+                </select>
+            </div>
+            <!-- Scrollable Vertical List Container -->
+            <div id="upcomingSlider"
+                style="padding: 12px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                <!-- Dynamically injected vertical player cards -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Sold Confirmation Dialog -->
+    <div id="soldConfirmModal" class="modal-backdrop hidden">
+        <div class="modal-dialog" style="max-width: 440px;">
+            <div class="modal-header" style="padding: 18px 24px;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: #111827;">Confirm Player Sale</h3>
+                <button id="btnCancelSold" class="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body sold-confirm-body" style="padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <!-- Player Photo -->
+                <img id="modalSoldPhoto" src="" alt="Player" class="modal-player-thumb"
+                    style="width: 110px; height: 110px; border-radius: 16px; object-fit: cover; border: 2px solid var(--border-color); box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+
+                <!-- Player Name -->
+                <h2 id="modalSoldPlayerName"
+                    style="font-family: var(--font-heading); font-size: 1.7rem; font-weight: 800; color: #111827; margin: 0; text-align: center; line-height: 1.2;">
+                    Player Name
+                </h2>
+
+                <!-- Team Card: Logo + Name + Price -->
+                <div id="modalSoldTeamCard" style="width: 100%; background: #F8FAFC; border: 1.5px solid var(--border-color); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; gap: 16px;">
+                    <img id="modalSoldTeamLogo" src="" alt="Team Logo"
+                        style="width: 52px; height: 52px; border-radius: 10px; object-fit: contain; background: #FFFFFF; border: 1px solid var(--border-color); padding: 4px; flex-shrink: 0;">
+                    <div style="flex: 1; overflow: hidden;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px;">Winning Team</div>
+                        <div id="modalSoldTeamName" style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 800; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team Name</div>
+                    </div>
+                    <div style="text-align: right; flex-shrink: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px;">Final Price</div>
+                        <div style="display: flex; align-items: baseline; gap: 4px; justify-content: flex-end;">
+                            <strong id="modalSoldPrice" class="num-font" style="font-size: 1.5rem; font-weight: 800; color: #047857;">0</strong>
+                            <span style="font-size: 0.8rem; color: #D97706; font-weight: 700;">🪙</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 16px 24px;">
+                <button onclick="document.getElementById('soldConfirmModal').classList.add('hidden')"
+                    class="btn btn-outline">Cancel</button>
+                <button id="btnConfirmSoldAction" class="btn btn-success">Confirm SOLD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Slide-Out Team Drawer for Squad Details -->
+    <div id="teamDetailsModal" class="modal-backdrop hidden">
+        <div class="modal-dialog">
+            <div class="modal-header" id="teamModalHeaderStyle">
+                <h3 id="teamModalName">Team Name</h3>
+                <button id="btnCloseTeamModal" class="btn-close-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="team-meta-bar">
+                    <div><span>Remaining Coins:</span> <strong id="teamModalCoins" class="num-font">5000</strong></div>
+                    <div><span>Spent:</span> <strong id="teamModalSpent" class="num-font">0</strong></div>
+                    <div><span>Squad Size:</span> <strong id="teamModalSquadSize" class="num-font">0 Players</strong>
+                    </div>
+                    <div><span>Avg Cost:</span> <strong id="teamModalAvgCost" class="num-font">0</strong></div>
+                </div>
+                <h4 style="font-family:var(--font-heading); margin-bottom:10px;">Purchased Squad Members</h4>
+                <div id="teamModalSquadList" class="squad-list-grid">
+                    <!-- Dynamically injected squad members -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/render.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>

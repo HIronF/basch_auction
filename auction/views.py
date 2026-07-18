@@ -84,6 +84,7 @@ def get_serialized_state():
                     "id": p.id,
                     "name": p.name,
                     "photo": p.photo,
+                    "category_id": p.category.id if p.category else None,
                     "category_name": p.category.name if p.category else "",
                     "sold_price": p.sold_price
                 }
@@ -249,6 +250,35 @@ def reset_auction(request):
 
 @csrf_exempt
 @transaction.atomic
+def bump_bid(request):
+    """Operator desk: bump or set the current bid amount without assigning a team yet."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "Invalid payload"}, status=400)
+
+    settings = AuctionSettings.objects.first()
+    if not settings or not settings.current_player:
+        return JsonResponse({"error": "No active player being auctioned"}, status=400)
+
+    base = settings.current_player.base_price
+    if "amount" in data and data["amount"] is not None:
+        amount = int(data["amount"])
+    else:
+        increment = int(data.get("increment", 10))
+        amount = settings.highest_bid + increment
+
+    if amount < base:
+        return JsonResponse({"error": f"Bid cannot be lower than base price of {base}"}, status=400)
+
+    settings.highest_bid = amount
+    settings.save()
+    return JsonResponse(get_serialized_state())
+
+@csrf_exempt
+@transaction.atomic
 def place_bid(request):
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -265,8 +295,9 @@ def place_bid(request):
 
     team = get_object_or_404(Team, id=team_id)
 
-    if amount <= settings.highest_bid and settings.highest_bidder is not None:
-        return JsonResponse({"error": f"Bid must be higher than current bid of {settings.highest_bid}"}, status=400)
+    # Operator desk: allow assigning/reassigning the winning team at the current price
+    if amount < settings.highest_bid:
+        return JsonResponse({"error": f"Bid must be at least the current bid of {settings.highest_bid}"}, status=400)
     
     if amount < settings.current_player.base_price:
         return JsonResponse({"error": f"Bid cannot be lower than base price of {settings.current_player.base_price}"}, status=400)
@@ -274,9 +305,12 @@ def place_bid(request):
     if team.coins < amount:
         return JsonResponse({"error": f"Not enough coins! {team.name} has only {team.coins} remaining."}, status=400)
 
+    # Already leading at this exact amount — no-op success
+    if settings.highest_bidder_id == team.id and settings.highest_bid == amount:
+        return JsonResponse(get_serialized_state())
+
     settings.highest_bid = amount
     settings.highest_bidder = team
-    # Extend timer if under 10 seconds left
     if settings.timer_remaining < 10:
         settings.timer_remaining = 15
     settings.save()

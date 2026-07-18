@@ -44,6 +44,28 @@ const API = {
         return data;
     },
 
+    async bumpBid(increment) {
+        const res = await fetch("/api/bump-bid/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ increment })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to update bid");
+        return data;
+    },
+
+    async setBidAmount(amount) {
+        const res = await fetch("/api/bump-bid/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to set bid amount");
+        return data;
+    },
+
     async sellPlayer() {
         const res = await fetch("/api/sell/", { method: "POST" });
         const data = await res.json();

@@ -23,6 +23,7 @@ urlpatterns = [
 
     # Bidding & Actions
     path("bid/", views.place_bid, name="place_bid"),
+    path("bump-bid/", views.bump_bid, name="bump_bid"),
     path("sell/", views.sell_player, name="sell_player"),
     path("unsold/", views.mark_unsold, name="mark_unsold"),
     path("undo-bid/", views.undo_bid, name="undo_bid"),

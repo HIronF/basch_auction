@@ -282,6 +282,11 @@
             cursor: pointer;
         }
 
+        .cap-reset-btn:disabled {
+            opacity: 0.55;
+            cursor: wait;
+        }
+
         .cap-reset-btn:hover {
             background: #FEE2E2;
             border-color: #EF4444;
@@ -1462,7 +1467,7 @@
                         <p>CAPTAIN ASSIGNMENT</p>
                     </div>
                     <div class="cap-top-actions">
-                        <button type="button" class="cap-reset-btn" id="btnResetCaptains" title="Clear all captain assignments">
+                        <button type="button" class="cap-reset-btn" id="btnResetCaptains" title="Reset captains, bids, and sales">
                             <i data-lucide="rotate-ccw"></i>
                             <span>Reset</span>
                         </button>
@@ -1574,17 +1579,42 @@
 
             const btnResetCaptains = document.getElementById("btnResetCaptains");
             if (btnResetCaptains) {
-                btnResetCaptains.addEventListener("click", () => {
-                    if (!confirm("Clear all captain assignments on this screen?")) return;
-                    Object.keys(captainAssignments).forEach(k => delete captainAssignments[k]);
-                    activeCaptainTeamId = null;
-                    sparkleTeamId = null;
+                btnResetCaptains.addEventListener("click", async () => {
+                    if (!confirm(
+                        "Reset captains and all bids/sales?\n\n" +
+                        "This clears captain assignments, sold players, bid history, and restores team coins."
+                    )) return;
+
                     const hint = document.getElementById("capHint");
-                    if (hint) {
-                        hint.innerHTML = `Click <strong>Assign Captain</strong> next to a team, then pick an Advanced (Captain) player from the dropdown.`;
-                        hint.style.color = "";
+                    const btn = btnResetCaptains;
+                    btn.disabled = true;
+                    try {
+                        const res = await fetch("/api/reset/", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ type: "all" })
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || "Reset failed");
+
+                        auctionState = data;
+                        Object.keys(captainAssignments).forEach(k => delete captainAssignments[k]);
+                        activeCaptainTeamId = null;
+                        sparkleTeamId = null;
+
+                        if (hint) {
+                            hint.innerHTML = `Reset complete. Click <strong>Assign Captain</strong> to assign captains again.`;
+                            hint.style.color = "#4D7C0F";
+                        }
+                        renderCaptainScreen();
+                    } catch (err) {
+                        if (hint) {
+                            hint.textContent = err.message || "Could not reset auction";
+                            hint.style.color = "#B91C1C";
+                        }
+                    } finally {
+                        btn.disabled = false;
                     }
-                    renderCaptainScreen();
                 });
             }
 

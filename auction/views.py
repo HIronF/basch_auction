@@ -232,11 +232,16 @@ def reset_auction(request):
         BidHistory.objects.all().delete()
         for t in Team.objects.all():
             t.coins = t.starting_coins
+            t.captain = ""
             t.save()
-        # Set first as live
+        # Set first non-Advanced as live
         settings = AuctionSettings.objects.first()
         if settings:
-            first = Player.objects.order_by("auction_order").first()
+            first = (
+                Player.objects.exclude(category__name__istartswith="Advanced")
+                .order_by("auction_order")
+                .first()
+            ) or Player.objects.order_by("auction_order").first()
             if first:
                 first.status = "Live"
                 first.save()
@@ -245,6 +250,7 @@ def reset_auction(request):
                 settings.highest_bid = first.base_price
                 settings.highest_bidder = None
                 settings.auction_status = "READY"
+                settings.timer_remaining = settings.timer
                 settings.save()
     elif reset_type == "categories" or reset_type == "all":
         call_command("seed_data")
